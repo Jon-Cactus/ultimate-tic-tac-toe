@@ -1,10 +1,10 @@
 import { useState } from 'react'
-import {SmallBoardProps, SquareProps} from './interfaces'
+import type {SmallBoardProps, SquareProps} from './assets/interfaces'
 import './App.css'
 
 function Square({ value, onSquareClick }: SquareProps) {
   return (
-    <button className="square" onClick={onSquareClick}>
+    <button className="square" onClick={() => onSquareClick}>
       {value}
     </button>
   )
@@ -51,19 +51,22 @@ function SmallBoard({ xIsNext, squares, onPlay }: SmallBoardProps) {
 }
 
 export default function Game() {
-  const [xIsNext, setXIsNext] = useState<boolean>(true);
   const [history, setHistory] = useState<(string | null)[][]>([Array(9).fill(null)]);
   const [currentMove, setCurrentMove] = useState<number>(0);
-  const currentSquares = history[history.length - 1];
+  // Current snapshot of the board
+  const currentSquares = history[currentMove];
+  // Determine which player is next
+  const xIsNext = (currentMove % 2 === 0);
 
   function handlePlay(nextSquares: (string | null)[]): void {
+    const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
     // Appends a new array based on the latest move
-    setHistory([...history, nextSquares]);
-    setXIsNext(!xIsNext);
+    setHistory(nextHistory);
+    setCurrentMove(nextHistory.length - 1);
   }
 
-  function jumpTo(nextMove) {
-
+  function jumpTo(nextMove: number): void {
+    setCurrentMove(nextMove);
   }
 
   const moves = history.map((squares, move) => {
