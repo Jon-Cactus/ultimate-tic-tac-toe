@@ -1,0 +1,70 @@
+* {
+  box-sizing: border-box;
+  margin: 0px;
+}
+
+:root {
+  font-family: Inter, sans-serif;
+  font-feature-settings: 'liga' 1, 'calt' 1;
+  line-height: 1.5;
+  font-weight: 400;
+  color: honeydew;
+
+
+  --primary: #5ccfe6;
+  --secondary: #c3a6ff;
+  --background: #1d2433;
+  --light-background: #2f3b54;
+  --dark-background: #171c28;
+  --player-1: #bae67e;
+  --player-2: #ff903c;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+@supports (font-variation-settings: normal) {
+  :root { font-family: InterVariable, sans-serif; }
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: var(--background);
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+.square {
+  font-size: 24px;
+  font-weight: bold;
+  margin: -1px -1px 0 0;
+  padding: 0;
+  line-height: 34px;
+  height: 34px;
+  width: 34px;
+  float: left;
+  background-color: var(--dark-background);
+  border: 1px solid var(--primary);
+}
+
+.board-row:after {
+  clear: both;
+  content: '';
+  display: table;
+}
+
+.board {
+  border: 1px solid var(--primary);
+  padding: 0px;
+}
+
+.player-1 {
+  color: var(--player-1);
+}
