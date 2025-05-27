@@ -31,21 +31,20 @@ function SubBoard({ xIsNext, squares, onPlay }: SubBoardProps) {
   return (
   <>
     <div className="status">{status}</div>
-    <div className="sub-board-row">
-      <Square value={squares[0]} onSquareClick={() => handleClick(0)}/>
-      <Square value={squares[1]} onSquareClick={() => handleClick(1)}/>
-      <Square value={squares[2]} onSquareClick={() => handleClick(2)}/>
-    </div>
-    <div className="sub-board-row">
-      <Square value={squares[3]} onSquareClick={() => handleClick(3)}/>
-      <Square value={squares[4]} onSquareClick={() => handleClick(4)}/>
-      <Square value={squares[5]} onSquareClick={() => handleClick(5)}/>
-    </div>
-    <div className="sub-board-row">
-      <Square value={squares[6]} onSquareClick={() => handleClick(6)}/>
-      <Square value={squares[7]} onSquareClick={() => handleClick(7)}/>
-      <Square value={squares[8]} onSquareClick={() => handleClick(8)}/>
-    </div>
+    {Array.from({length: 3}, (_, row) => (
+      <div className="sub-board-row" key={row}>
+        {Array.from({length: 3}, (_, col) => {
+          const index = row * 3 + col;
+          return (
+            <Square
+            key={index}
+            value={squares[index]}
+            onSquareClick={() => handleClick(index)}
+            />
+          )
+        })}
+      </div>
+    ))}
   </> 
   )
 }
@@ -103,14 +102,9 @@ export default function Game() {
 
 function calculateWinner(squares: (string | null)[])  {
   const lines = [
-    [0, 1, 2],
-    [3, 4, 5],
-    [6, 7, 8],
-    [0, 3, 6],
-    [1, 4, 7],
-    [2, 5, 8],
-    [0, 4, 8],
-    [2, 4, 6]
+    [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
+    [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
+    [0, 4, 8], [2, 4, 6]             // Diagonals
   ];
   for (let i: number = 0; i < lines.length; i++) {
     const [a, b, c] = lines[i];
