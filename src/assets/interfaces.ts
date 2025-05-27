@@ -1,4 +1,4 @@
-export interface SmallBoardProps {
+export interface SubBoardProps {
     xIsNext: boolean;
     squares: (string | null)[];
     onPlay: (nextSquares: (string | null)[]) => void;
@@ -6,5 +6,5 @@ export interface SmallBoardProps {
 
 export interface SquareProps {
     value: (string | null);
-    onSquareClick: (handleClick: (number)) => void;
+    onSquareClick: () => void;
 }
