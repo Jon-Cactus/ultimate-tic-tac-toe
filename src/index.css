@@ -69,3 +69,7 @@ h1 {
 .player-1 {
   color: var(--player-1);
 }
+
+.won {
+  background-color: var(--light-background);
+}

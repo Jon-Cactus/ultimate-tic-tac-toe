@@ -2,15 +2,17 @@ import { useState } from 'react'
 import type {SubBoardProps, SquareProps} from './assets/interfaces'
 import './App.css'
 
-function Square({ value, onSquareClick }: SquareProps) {
+function Square({ value, onSquareClick, isWon }: SquareProps) {
   return (
-    <button className="square" onClick={onSquareClick}>
+    <button
+    className={`square ${isWon ? 'won' : ''}`}
+    onClick={onSquareClick}>
       {value}
     </button>
   )
 }
 
-function SubBoard({ xIsNext, squares, onPlay }: SubBoardProps) {
+function SubBoard({ xIsNext, squares, onPlay, winningSquares }: SubBoardProps) {
   function handleClick(i: number) {
     // Return early if square already filled or someone has won
     if (squares[i] || calculateWinner(squares)) return;
@@ -20,9 +22,9 @@ function SubBoard({ xIsNext, squares, onPlay }: SubBoardProps) {
     onPlay(nextSquares);
   }
 
-  const winner = calculateWinner(squares);
   let status;
-  if (winner) {
+  if (winningSquares) {
+    const winner = squares[winningSquares[0]];
     status = 'Winner: ' + winner;
   } else {
     status = 'Next player: ' + (xIsNext ? 'X' : 'O');
@@ -35,11 +37,13 @@ function SubBoard({ xIsNext, squares, onPlay }: SubBoardProps) {
       <div className="sub-board-row" key={row}>
         {Array.from({length: 3}, (_, col) => {
           const index = row * 3 + col;
+          const isWon = winningSquares?.includes(index);
           return (
             <Square
             key={index}
             value={squares[index]}
             onSquareClick={() => handleClick(index)}
+            isWon={isWon}
             />
           )
         })}
@@ -56,6 +60,7 @@ export default function Game() {
   const currentSquares = history[currentMove];
   // Determine which player is next
   const xIsNext = (currentMove % 2 === 0);
+  const winningSquares = calculateWinner(currentSquares);
 
   function handlePlay(nextSquares: (string | null)[]): void {
     const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
@@ -91,7 +96,12 @@ export default function Game() {
   return (
     <div className="game">
       <div className="board">
-        <SubBoard xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
+        <SubBoard
+        xIsNext={xIsNext}
+        squares={currentSquares}
+        onPlay={handlePlay}
+        winningSquares={winningSquares}
+        />
       </div>
       <div className="game-info">
         <ol>{moves}</ol>
@@ -109,7 +119,7 @@ function calculateWinner(squares: (string | null)[])  {
   for (let i: number = 0; i < lines.length; i++) {
     const [a, b, c] = lines[i];
     if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-      return squares[a];
+      return [a, b, c];
     }
   }
   return null;
