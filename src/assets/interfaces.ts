@@ -3,6 +3,7 @@ export interface SubBoardProps {
     squares: (string | null)[];
     onPlay: (nextSquares: (string | null)[]) => void;
     winningSquares: (number[] | null);
+    status: (string | null);
 }
 
 export interface SquareProps {

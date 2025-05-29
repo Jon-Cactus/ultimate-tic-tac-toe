@@ -1,6 +1,7 @@
-import { useState } from 'react'
-import type {SubBoardProps, SquareProps} from './assets/interfaces'
-import './App.css'
+import { useState } from 'react';
+import type {SubBoardProps, SquareProps} from './assets/interfaces';
+import { calculateWinner, getMoveCoordinates } from './utils/helpers';
+import './App.css';
 
 function Square({ value, onSquareClick, isWon }: SquareProps) {
   return (
@@ -12,7 +13,7 @@ function Square({ value, onSquareClick, isWon }: SquareProps) {
   )
 }
 
-function SubBoard({ xIsNext, squares, onPlay, winningSquares }: SubBoardProps) {
+function SubBoard({ xIsNext, squares, onPlay, winningSquares, status }: SubBoardProps) {
   function handleClick(i: number) {
     // Return early if square already filled or someone has won
     if (squares[i] || calculateWinner(squares)) return;
@@ -20,14 +21,6 @@ function SubBoard({ xIsNext, squares, onPlay, winningSquares }: SubBoardProps) {
     // Determine which player is next
     nextSquares[i] = xIsNext ? 'X' : 'O';
     onPlay(nextSquares);
-  }
-
-  let status;
-  if (winningSquares) {
-    const winner = squares[winningSquares[0]];
-    status = 'Winner: ' + winner;
-  } else {
-    status = 'Next player: ' + (xIsNext ? 'X' : 'O');
   }
 
   return (
@@ -60,6 +53,7 @@ export default function Game() {
   const currentSquares = history[currentMove];
   // Determine which player is next
   const xIsNext = (currentMove % 2 === 0);
+  // Check for winner
   const winningSquares = calculateWinner(currentSquares);
 
   function handlePlay(nextSquares: (string | null)[]): void {
@@ -75,23 +69,42 @@ export default function Game() {
     setHistory(nextHistory);
   }
 
+  let status;
+  if (winningSquares) {
+    const winner = currentSquares[winningSquares[0]];
+    status = 'Winner: ' + winner;
+  } else {
+    status = 'Next player: ' + (xIsNext ? 'X' : 'O');
+  }
+  if (currentSquares.includes(null) === false && !winningSquares) {
+    status = 'Tie!';
+  }
+
+  // Create move list
   const moves = history.map((squares, move) => {
-    let description = (move > 0) ? 'Go to move #' + move : 'Go to game start';
-    if (move === history.length - 1) {
-      description = `Currently on move #${move}`;
-      return (
-        <li key={move}>
-          <p>{description}</p>
-        </li>
-      )
-    }
-    
+    const isCurrentMove = move === history.length - 1;
+    const player = (move % 2 === 0) ? 'O' : 'X';
+    const prevSquares = move > 0 ? history[move - 1] : undefined;
+    const moveCoordinates = getMoveCoordinates(prevSquares, squares);
+      // Determine the correct description based on current move and move #
+    const description = (isCurrentMove && history.length > 9)
+      ? 'No more legal moves!'
+      : isCurrentMove
+      ? `Currently on move #${move + 1}`
+      : move > 0 && moveCoordinates
+      ? `Go to move #${move} (${player} on ${moveCoordinates[0]}, ${moveCoordinates[1]})`
+      : 'Go to game start';
+    // Determine whether the li should be rendered as a paragraph or button based on currentMove
     return (
       <li key={move}>
-        <button onClick={() => jumpTo(move)}>{description}</button>
+        {isCurrentMove ? (
+          <p>{description}</p>
+        ) : (
+          <button onClick={() => jumpTo(move)}>{description}</button>
+        )}
       </li>
-    )
-  })
+    );
+  });
 
   return (
     <div className="game">
@@ -101,6 +114,7 @@ export default function Game() {
         squares={currentSquares}
         onPlay={handlePlay}
         winningSquares={winningSquares}
+        status={status}
         />
       </div>
       <div className="game-info">
@@ -109,20 +123,4 @@ export default function Game() {
     </div>
   )
 }
-
-function calculateWinner(squares: (string | null)[])  {
-  const lines = [
-    [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
-    [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
-    [0, 4, 8], [2, 4, 6]             // Diagonals
-  ];
-  for (let i: number = 0; i < lines.length; i++) {
-    const [a, b, c] = lines[i];
-    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-      return [a, b, c];
-    }
-  }
-  return null;
-}
-
 
