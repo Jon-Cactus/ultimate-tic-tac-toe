@@ -18,6 +18,7 @@
   --dark-background: #171c28;
   --player-1: #bae67e;
   --player-2: #ff903c;
+  --text: #f1d580;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -68,6 +69,10 @@ h1 {
 
 .player-1 {
   color: var(--player-1);
+}
+
+.player-2 {
+  color: var(--player-2);
 }
 
 .won {

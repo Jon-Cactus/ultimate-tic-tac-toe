@@ -1,9 +1,12 @@
-export interface SubBoardProps {
+export interface MetaBoardProps {
     xIsNext: boolean;
-    squares: (string | null)[];
-    onPlay: (nextSquares: (string | null)[]) => void;
-    winningSquares: (number[] | null);
+    metaBoard: (string | null)[][];
+    onPlay: (nextSquares: (string | null)[][]) => void;
+    subBoardWinners: (number[] | null);
     status: (string | null);
+}
+
+export interface SubBoardProps {
 }
 
 export interface SquareProps {
