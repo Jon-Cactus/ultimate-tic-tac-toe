@@ -35,7 +35,9 @@ function SubBoard({ subBoardIdx, squares, onSquareClick }: SubBoardProps) {
   )
 }
 
-
+// TODO: need to restrict next move to the subBoardIdx of the last move's squareIdx
+// TODO: need to prevent moves in SubBoards that have been won
+  // Will likely require creating a state for won SubBoards or a function to check for them
 export default function Game() {
   const [history, setHistory] = useState<(string | null)[][][]>([
     Array(9).fill(null).map(() => Array(9).fill(null))
@@ -45,13 +47,14 @@ export default function Game() {
   const currentBoards = history[currentMove];
   // Determine which player is next
   const xIsNext = (currentMove % 2 === 0);
-  // Check for winner
+  // Check for winner TODO: NEEDS UPDATE WITH NEW HISTORY FORMAT
   const { gameWinner, subBoardWinners } = calculateWinner(currentBoards);
 
   
   function handleMove(subBoardIdx: number, squareIdx: number): void {
     const currentSubBoard = currentBoards[subBoardIdx];
     if (currentSubBoard[squareIdx]) return;
+    if (subBoardWinners[subBoardIdx]) return;
 
     const nextSubBoard = [...currentSubBoard];
     nextSubBoard[squareIdx] = xIsNext ? 'X' : 'O';
