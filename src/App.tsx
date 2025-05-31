@@ -3,31 +3,29 @@ import type {SubBoardProps, SquareProps} from './assets/interfaces';
 import { calculateWinner, getMoveCoordinates } from './utils/helpers';
 import './App.css';
 
-function Square({ value, onSquareClick, isWon }: SquareProps) {
+function Square({ value, onSquareClick }: SquareProps) {
   return (
     <button
-    className={`square ${isWon ? 'won' : ''}`}
+    className="square"
     onClick={onSquareClick}>
       {value}
     </button>
   )
 }
 
-function SubBoard({ xIsNext, squares, onPlay, winningSquares, status }: SubBoardProps) {
+function SubBoard({ subBoardIdx, squares, onSquareClick }: SubBoardProps) {
 
   return (
   <>
     {Array.from({length: 3}, (_, row) => (
       <div className="sub-board-row" key={row}>
         {Array.from({length: 3}, (_, col) => {
-          const index = row * 3 + col;
-          const isWon = winningSquares?.includes(index);
+          const squareIdx = row * 3 + col;
           return (
             <Square
-            key={index}
-            value={squares[index]}
-            onSquareClick={() => handleClick(index)}
-            isWon={isWon}
+              key={squareIdx}
+              value={squares[squareIdx]}
+              onSquareClick={() => onSquareClick(squareIdx)}
             />
           )
         })}
@@ -37,40 +35,31 @@ function SubBoard({ xIsNext, squares, onPlay, winningSquares, status }: SubBoard
   )
 }
 
-// TODO: Need to figure out which parts to keep from SubBoard, or if it should be eliminated entirely
-
-
-function MetaBoard({ xIsNext, metaBoard, onPlay, subBoardWinners, status }: MetaBoardProps) {
-  function handleClick(boardIdx: number, squareIdx: number) {
-    // Return early if square already filled or someone has won
-    if (metaBoard[boardIdx][squareIdx] || calculateWinner(metaBoard)) return;
-    const nextBoard = metaBoard.slice(); // Create copy of the squares array
-    // Determine which player is next
-    nextBoard[boardIdx][squareIdx] = xIsNext ? 'X' : 'O';
-    onPlay(nextBoard);
-  }
-  return (
-    <>
-      <div className="status">{status}</div>
-
-    </>
-  )
-}
 
 export default function Game() {
-  const [history, setHistory] = useState<(string | null)[][][]>([Array(9)
-    .fill(null)
-    .map(() => Array(9).fill(null))]);
+  const [history, setHistory] = useState<(string | null)[][][]>([
+    Array(9).fill(null).map(() => Array(9).fill(null))
+  ]);
   const [currentMove, setCurrentMove] = useState<number>(0);
   // Current snapshot of the board
-  const currentMetaBoard = history[currentMove];
+  const currentBoards = history[currentMove];
   // Determine which player is next
   const xIsNext = (currentMove % 2 === 0);
   // Check for winner
-  const { gameWinner, subBoardWinners } = calculateWinner(currentMetaBoard);
+  const { gameWinner, subBoardWinners } = calculateWinner(currentBoards);
 
-  function handlePlay(nextBoard: (string | null)[][]): void {
-    const nextHistory = [...history.slice(0, currentMove + 1), nextBoard];
+  
+  function handleMove(subBoardIdx: number, squareIdx: number): void {
+    const currentSubBoard = currentBoards[subBoardIdx];
+    if (currentSubBoard[squareIdx]) return;
+
+    const nextSubBoard = [...currentSubBoard];
+    nextSubBoard[squareIdx] = xIsNext ? 'X' : 'O';
+
+    const nextBoards = [...currentBoards];
+    nextBoards[subBoardIdx] = nextSubBoard;
+
+    const nextHistory = [...history.slice(0, currentMove + 1), nextBoards];
     // Appends a new array based on the latest move
     setHistory(nextHistory);
     setCurrentMove(nextHistory.length - 1);
@@ -88,9 +77,6 @@ export default function Game() {
     status = 'Winner: ' + gameWinner;
   } else {
     status = 'Next player: ' + (xIsNext ? 'X' : 'O');
-  }
-  if (currentSquares.includes(null) === false && !winningSquares) {
-    status = 'Tie!';
   }
 
   // Create move list
@@ -122,19 +108,27 @@ export default function Game() {
 
   return (
     <div className="game">
-      <div className="board">
-        <MetaBoard
-        xIsNext={xIsNext}
-        metaBoard={currentMetaBoard}
-        onPlay={handlePlay}
-        subBoardWinners={subBoardWinners}
-        status={status}
-        />
+      <div className="meta-board">
+        <div className="status">{status}</div>
+        {Array.from({length: 3}, (_, row) => (
+          <div className="meta-board-row" key={row}>
+            {Array.from({length: 3}, (_, col) => {
+              const subBoardIdx = row * 3 + col;
+              return (
+                <SubBoard
+                  key={subBoardIdx}
+                  subBoardIdx={subBoardIdx}
+                  squares={currentBoards[subBoardIdx]}
+                  onSquareClick={(squareIdx) => handleMove(subBoardIdx, squareIdx)}
+                />
+              );
+            })}
+          </div>
+        ))}
       </div>
       <div className="game-info">
         <ol>{moves}</ol>
       </div>
     </div>
-  )
+  );
 }
-
