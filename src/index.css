@@ -13,11 +13,12 @@
 
   --primary: #5ccfe6;
   --secondary: #c3a6ff;
+  --tertiary: #1a9fff;
   --background: #1d2433;
   --light-background: #2f3b54;
   --dark-background: #171c28;
   --player-1: #bae67e;
-  --player-2: #ff903c;
+  --player-2: #ffae47;
   --text: #f1d580;
 
   font-synthesis: none;
@@ -42,8 +43,40 @@ h1 {
   line-height: 1.1;
 }
 
+.game {
+  display: flex;
+}
+
 .status {
   color: var(--text);
+}
+
+.meta-board {
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+  border: 1px solid var(--primary);
+  padding: 0px;
+}
+
+.meta-board-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.sub-board {
+  display: inline-block;
+  border: 1px solid var(--primary);
+}
+
+.sub-board-row {
+  display: block;
+}
+
+.sub-board-row:after {
+  clear: both;
+  content: '';
+  display: table;
 }
 
 .square {
@@ -55,20 +88,9 @@ h1 {
   height: 34px;
   width: 34px;
   float: left;
-  color: var(--secondary);
+  color: var(--player-2);
   background-color: var(--dark-background);
   border: 1px solid var(--primary);
-}
-
-.sub-board-row:after {
-  clear: both;
-  content: '';
-  display: table;
-}
-
-.meta-board {
-  border: 1px solid var(--primary);
-  padding: 0px;
 }
 
 .player-1 {

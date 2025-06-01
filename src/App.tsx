@@ -4,9 +4,15 @@ import { calculateWinner, getMoveCoordinates } from './utils/helpers';
 import './App.css';
 
 function Square({ value, onSquareClick }: SquareProps) {
+  const playerColor =
+    value === 'X'
+    ? 'player-1'
+    : value === 'Y'
+    ? 'player-2'
+    : ''
   return (
     <button
-    className="square"
+    className={`square ${playerColor}`}
     onClick={onSquareClick}>
       {value}
     </button>
@@ -17,44 +23,46 @@ function SubBoard({ subBoardIdx, squares, onSquareClick }: SubBoardProps) {
 
   return (
   <>
-    {Array.from({length: 3}, (_, row) => (
-      <div className="sub-board-row" key={row}>
-        {Array.from({length: 3}, (_, col) => {
-          const squareIdx = row * 3 + col;
-          return (
-            <Square
-              key={squareIdx}
-              value={squares[squareIdx]}
-              onSquareClick={() => onSquareClick(squareIdx)}
-            />
-          )
-        })}
-      </div>
-    ))}
+    <div className="sub-board">
+      {Array.from({length: 3}, (_, row) => (
+        <div className="sub-board-row" key={row}>
+          {Array.from({length: 3}, (_, col) => {
+            const squareIdx = row * 3 + col;
+            return (
+              <Square
+                key={squareIdx}
+                value={squares[squareIdx]}
+                onSquareClick={() => onSquareClick(squareIdx)}
+              />
+            )
+          })}
+        </div>
+      ))}
+    </div>
   </> 
   )
 }
 
 // TODO: need to restrict next move to the subBoardIdx of the last move's squareIdx
-// TODO: need to prevent moves in SubBoards that have been won
-  // Will likely require creating a state for won SubBoards or a function to check for them
 export default function Game() {
   const [history, setHistory] = useState<(string | null)[][][]>([
     Array(9).fill(null).map(() => Array(9).fill(null))
   ]);
   const [currentMove, setCurrentMove] = useState<number>(0);
+  const [isActive, setIsActive] = useState<number | null>(null);
   // Current snapshot of the board
   const currentBoards = history[currentMove];
   // Determine which player is next
   const xIsNext = (currentMove % 2 === 0);
-  // Check for winner TODO: NEEDS UPDATE WITH NEW HISTORY FORMAT
+  // Check for winner
   const { gameWinner, subBoardWinners } = calculateWinner(currentBoards);
 
   
   function handleMove(subBoardIdx: number, squareIdx: number): void {
     const currentSubBoard = currentBoards[subBoardIdx];
-    if (currentSubBoard[squareIdx]) return;
-    if (subBoardWinners[subBoardIdx]) return;
+    if (currentSubBoard[squareIdx]) return; // Block moves on filled squares
+    if (subBoardWinners[subBoardIdx]) return; // Block moves on won subboards
+    if (currentMove !== 0 && subBoardIdx !== isActive) return; // Block moves on non-active subboards
 
     const nextSubBoard = [...currentSubBoard];
     nextSubBoard[squareIdx] = xIsNext ? 'X' : 'O';
@@ -66,6 +74,7 @@ export default function Game() {
     // Appends a new array based on the latest move
     setHistory(nextHistory);
     setCurrentMove(nextHistory.length - 1);
+    setIsActive(squareIdx);
   }
 
   function jumpTo(nextMove: number): void {
@@ -111,8 +120,8 @@ export default function Game() {
 
   return (
     <div className="game">
-      <div className="meta-board">
-        <div className="status">{status}</div>
+      <div className="status">{status}</div>
+        <div className="meta-board">
         {Array.from({length: 3}, (_, row) => (
           <div className="meta-board-row" key={row}>
             {Array.from({length: 3}, (_, col) => {
