@@ -3,7 +3,7 @@ import type {SubBoardProps, SquareProps} from './assets/interfaces';
 import { calculateWinner, getMoveCoordinates } from './utils/helpers';
 import './App.css';
 
-function Square({ value, onSquareClick }: SquareProps) {
+function Square({ value, onSquareClick, active }: SquareProps) {
   const playerColor =
     value === 'X'
     ? 'player-1'
@@ -12,20 +12,19 @@ function Square({ value, onSquareClick }: SquareProps) {
     : ''
   return (
     <button
-    className={`square ${playerColor}`}
+    className={`square ${playerColor} ${active}`}
     onClick={onSquareClick}>
       {value}
     </button>
   )
 }
 
-function SubBoard({ subBoardIdx, squares, onSquareClick }: SubBoardProps) {
-
+function SubBoard({ subBoardIdx, squares, onSquareClick, isActive }: SubBoardProps) {
   return (
   <>
-    <div className="sub-board">
+    <div className={`sub-board`}>
       {Array.from({length: 3}, (_, row) => (
-        <div className="sub-board-row" key={row}>
+        <div className={`sub-board-row `} key={row}>
           {Array.from({length: 3}, (_, col) => {
             const squareIdx = row * 3 + col;
             return (
@@ -33,6 +32,7 @@ function SubBoard({ subBoardIdx, squares, onSquareClick }: SubBoardProps) {
                 key={squareIdx}
                 value={squares[squareIdx]}
                 onSquareClick={() => onSquareClick(squareIdx)}
+                active={subBoardIdx === isActive ? 'active' : ''}
               />
             )
           })}
@@ -62,19 +62,26 @@ export default function Game() {
     const currentSubBoard = currentBoards[subBoardIdx];
     if (currentSubBoard[squareIdx]) return; // Block moves on filled squares
     if (subBoardWinners[subBoardIdx]) return; // Block moves on won subboards
-    if (currentMove !== 0 && subBoardIdx !== isActive) return; // Block moves on non-active subboards
+    if (isActive !== null && subBoardIdx !== isActive) return; // Block moves on non-active subboards
 
     const nextSubBoard = [...currentSubBoard];
     nextSubBoard[squareIdx] = xIsNext ? 'X' : 'O';
 
     const nextBoards = [...currentBoards];
     nextBoards[subBoardIdx] = nextSubBoard;
-
+    // Grab updated winning boards based on new board state
+    const { subBoardWinners: nextSubBoardWinners } = calculateWinner(nextBoards);
+    // Update game state
     const nextHistory = [...history.slice(0, currentMove + 1), nextBoards];
     // Appends a new array based on the latest move
     setHistory(nextHistory);
     setCurrentMove(nextHistory.length - 1);
-    setIsActive(squareIdx);
+    // Determine which subboards are okay to move in
+    if (nextSubBoardWinners[squareIdx]) {
+      setIsActive(null); // Allow any subboard in cases when won or full
+    } else {
+      setIsActive(squareIdx); 
+    }
   }
 
   function jumpTo(nextMove: number): void {
@@ -132,6 +139,7 @@ export default function Game() {
                   subBoardIdx={subBoardIdx}
                   squares={currentBoards[subBoardIdx]}
                   onSquareClick={(squareIdx) => handleMove(subBoardIdx, squareIdx)}
+                  isActive={isActive}
                 />
               );
             })}

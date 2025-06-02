@@ -80,17 +80,21 @@ h1 {
 }
 
 .square {
-  font-size: 24px;
+  font-size: 36px;
   font-weight: bold;
   margin: -1px -1px 0 0;
   padding: 0;
   line-height: 34px;
-  height: 34px;
-  width: 34px;
+  height: 50px;
+  width: 50px;
   float: left;
   color: var(--player-2);
   background-color: var(--dark-background);
   border: 1px solid var(--primary);
+}
+
+.square:hover, .active:hover {
+  background-color: var(--secondary);
 }
 
 .player-1 {
@@ -102,5 +106,9 @@ h1 {
 }
 
 .won {
+  background-color: var(--light-background);
+}
+
+.active {
   background-color: var(--light-background);
 }
