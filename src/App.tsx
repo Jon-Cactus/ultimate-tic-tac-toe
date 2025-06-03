@@ -7,7 +7,7 @@ function Square({ value, onSquareClick, active }: SquareProps) {
   const playerColor =
     value === 'X'
     ? 'player-1'
-    : value === 'Y'
+    : value === 'O'
     ? 'player-2'
     : ''
   return (
@@ -19,12 +19,18 @@ function Square({ value, onSquareClick, active }: SquareProps) {
   )
 }
 
-function SubBoard({ subBoardIdx, squares, onSquareClick, isActive }: SubBoardProps) {
+function SubBoard({ subBoardIdx, squares, onSquareClick, isActive, isWon }: SubBoardProps) {
+  const playerColor =
+    isWon === 'X'
+    ? 'player-1 won'
+    : isWon === 'O'
+    ? 'player-2 won'
+    : ''
   return (
   <>
-    <div className={`sub-board`}>
+    <div className={`sub-board ${playerColor}`}>{isWon !== 'draw' ? isWon : ''}
       {Array.from({length: 3}, (_, row) => (
-        <div className={`sub-board-row `} key={row}>
+        <div className={`sub-board-row ${isWon ? 'hidden' : ''}`} key={row}>
           {Array.from({length: 3}, (_, col) => {
             const squareIdx = row * 3 + col;
             return (
@@ -60,8 +66,10 @@ export default function Game() {
   
   function handleMove(subBoardIdx: number, squareIdx: number): void {
     const currentSubBoard = currentBoards[subBoardIdx];
-    if (currentSubBoard[squareIdx]) return; // Block moves on filled squares
-    if (subBoardWinners[subBoardIdx]) return; // Block moves on won subboards
+    if (currentSubBoard[squareIdx] || // Blocks moves on filled squares
+      subBoardWinners[subBoardIdx] || // Blocks moves on subboards that have been won
+      gameWinner) return; // Block moves when the game has been won
+    //if (subBoardWinners[subBoardIdx]) return; // Block moves on won subboards
     if (isActive !== null && subBoardIdx !== isActive) return; // Block moves on non-active subboards
 
     const nextSubBoard = [...currentSubBoard];
@@ -106,49 +114,52 @@ export default function Game() {
     // TODO: Needs altering to account for the 3d arrays
     const moveCoordinates = getMoveCoordinates(prevBoard, board);
       // Determine the correct description based on current move and move #
-    const description = (isCurrentMove && history.length > 9)
-      ? 'No more legal moves!'
+    const description = (isCurrentMove && gameWinner === 'draw')
+      ? gameWinner
       : isCurrentMove
-      ? `Currently on move #${move + 1}`
+      ? `Currently on move #${move}`
       : move > 0 && moveCoordinates
-      ? `Go to move #${move} (${player} on ${moveCoordinates[0]}, ${moveCoordinates[1]})`
-      : 'Go to game start';
+      ? `${player} moved on (${moveCoordinates[0]}, ${moveCoordinates[1]})`
+      : 'Game start';
     // Determine whether the li should be rendered as a paragraph or button based on currentMove
     return (
       <li key={move}>
         {isCurrentMove ? (
           <p>{description}</p>
         ) : (
-          <button onClick={() => jumpTo(move)}>{description}</button>
+          //<button onClick={() => jumpTo(move)}>{description}</button>
+          <p>{description}</p>
         )}
       </li>
     );
   });
 
   return (
-    <div className="game">
-      <div className="status">{status}</div>
-        <div className="meta-board">
-        {Array.from({length: 3}, (_, row) => (
-          <div className="meta-board-row" key={row}>
-            {Array.from({length: 3}, (_, col) => {
-              const subBoardIdx = row * 3 + col;
-              return (
-                <SubBoard
-                  key={subBoardIdx}
-                  subBoardIdx={subBoardIdx}
-                  squares={currentBoards[subBoardIdx]}
-                  onSquareClick={(squareIdx) => handleMove(subBoardIdx, squareIdx)}
-                  isActive={isActive}
-                />
-              );
-            })}
-          </div>
-        ))}
+      <div className="game">
+        <div className="status">{status}</div>
+          <div className="meta-board">
+          {Array.from({length: 3}, (_, row) => (
+            <div className="meta-board-row" key={row}>
+              {Array.from({length: 3}, (_, col) => {
+                const subBoardIdx = row * 3 + col;
+                const isWon = subBoardWinners[subBoardIdx]
+                return (
+                  <SubBoard
+                    key={subBoardIdx}
+                    subBoardIdx={subBoardIdx}
+                    squares={currentBoards[subBoardIdx]}
+                    onSquareClick={(squareIdx) => handleMove(subBoardIdx, squareIdx)}
+                    isActive={isActive}
+                    isWon={isWon}
+                  />
+                );
+              })}
+            </div>
+          ))}
+        </div>
+        <div className="game-info">
+          <ol>{moves}</ol>
+        </div>
       </div>
-      <div className="game-info">
-        <ol>{moves}</ol>
-      </div>
-    </div>
   );
 }

@@ -3,6 +3,7 @@ export interface SubBoardProps {
     squares: (string | null)[];
     onSquareClick: (squareIdx: number) => void;
     isActive: (number | null);
+    isWon: (string | null);
 }
 
 export interface SquareProps {

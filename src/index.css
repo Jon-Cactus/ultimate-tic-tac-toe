@@ -45,10 +45,34 @@ h1 {
 
 .game {
   display: flex;
+  justify-content:space-evenly;
+  margin-top: 100px;
+}
+
+.game-info {
+  height: 450px;
+  overflow-y: auto;
+  background-color: var(--dark-background);
+  border: 3px solid var(--secondary);
+}
+
+.game-info::-webkit-scrollbar {
+  width: 8px;
+}
+.game-info::-webkit-scrollbar-track {
+  background: var(--background);
+}
+.game-info::-webkit-scrollbar-thumb {
+  background: var(--light-background);
+  border-radius: 4px;
+}
+.game-info::-webkit-scrollbar-thumb:hover {
+  background: var(--text);
 }
 
 .status {
   color: var(--text);
+  font-size: 22px;
 }
 
 .meta-board {
@@ -66,7 +90,11 @@ h1 {
 
 .sub-board {
   display: inline-block;
+  height: 150px;
+  width: 150px;
   border: 1px solid var(--primary);
+  font-weight: bold;
+  font-size: 148px;
 }
 
 .sub-board-row {
@@ -107,8 +135,14 @@ h1 {
 
 .won {
   background-color: var(--light-background);
+  text-align: center;
+  line-height: 1;
 }
 
 .active {
   background-color: var(--light-background);
+}
+
+.hidden {
+  display: none;
 }

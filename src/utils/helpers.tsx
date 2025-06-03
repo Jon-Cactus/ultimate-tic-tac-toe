@@ -24,6 +24,10 @@ export function calculateWinner(currentMetaBoard: (string | null)[][]): { gameWi
        break;
     }
   }
+
+  if (gameWinner === null && subBoardWinners.every(winner => winner === 'draw')) {
+    gameWinner = 'draw';
+  }
   return { gameWinner, subBoardWinners };
 }
 
