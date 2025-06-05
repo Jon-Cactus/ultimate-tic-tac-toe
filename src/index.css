@@ -47,10 +47,13 @@ h1 {
   display: flex;
   justify-content:space-evenly;
   margin-top: 100px;
+  border: 1px solid red;
 }
 
 .game-info {
   height: 450px;
+  min-width: 250px;
+  margin-top: 35px;
   overflow-y: auto;
   background-color: var(--dark-background);
   border: 3px solid var(--secondary);
@@ -131,6 +134,13 @@ h1 {
 
 .player-2 {
   color: var(--player-2);
+}
+
+.current-move {
+  background-color: var(--secondary);
+  color: var(--dark-background);
+  font-size: 22px;
+  text-align: center;
 }
 
 .won {

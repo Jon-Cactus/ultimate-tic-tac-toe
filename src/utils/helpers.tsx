@@ -31,15 +31,20 @@ export function calculateWinner(currentMetaBoard: (string | null)[][]): { gameWi
   return { gameWinner, subBoardWinners };
 }
 
-export function getMoveCoordinates(prevBoard: (string | null)[][] | undefined, currentSquares: (string | null)[][]): (number[] | null) {
+export function getMoveCoordinates(
+  prevBoard: (string | null)[][] | undefined,
+  currentBoard: (string | null)[][]
+): (number[] | null) {
   if (!prevBoard) {
     return null;
   }
-  for (let i: number = 0; i < 9; i++) {
-    if (prevBoard[i] !== currentSquares[i]) {
-      const x = Math.floor(i / 3) + 1;
-      const y = (i % 3) + 1;
-      return [x, y];
+  for (let boardIdx: number = 0; boardIdx < 9; boardIdx++) {
+    if (prevBoard[boardIdx] && currentBoard[boardIdx]) {
+      for (let squareIdx: number = 0; squareIdx < 9; squareIdx++) {
+        if (prevBoard[boardIdx][squareIdx] !== currentBoard[boardIdx][squareIdx]) {
+          return [boardIdx + 1, squareIdx + 1]
+        }
+      }
     }
   }
   return null;
