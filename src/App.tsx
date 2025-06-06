@@ -3,6 +3,10 @@ import './App.css';
 
 export default function App() {
   return (
-    <Game />
+    <div className="page">
+      <div className="hidden"></div>
+      <Game />
+    </div>
+    
   )
 }
