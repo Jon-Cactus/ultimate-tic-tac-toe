@@ -50,23 +50,42 @@ function SubBoard({ subBoardIdx, squares, onSquareClick, isActive, isWon }: SubB
 }
 
 export default function Game() {
-  const [history, setHistory] = useState<(string | null)[][][]>([
+  // Array of meta-boards, each entry being a 9x9 array of either null or X or O
+  const [history, setHistory] = useState<('X' | 'O' | null)[][][]>([
     Array(9).fill(null).map(() => Array(9).fill(null))
   ]);
-  const [currentMove, setCurrentMove] = useState<number>(0);
-  const [isActive, setIsActive] = useState<number | null>(null);
-  // Current snapshot of the board
-  const currentBoards = history[currentMove];
+  const [currentMove, setCurrentMove] = useState<number>(0); // Save move number
+  const [isActive, setIsActive] = useState<number | null>(null); // Save active board index
+  const [startingPlayer, setStartingPlayer] = useState<'X' | 'O' | null>(null);
+  const [gameStarted, setGameStarted] = useState<boolean>(false);
+
+  const currentBoards = history[currentMove]; // Current snapshot of the board
   // Determine which player is next
-  const xIsNext = (currentMove % 2 === 0);
+  let xIsNext = true;
+  if (startingPlayer !== null) {
+    if (startingPlayer === 'X') {
+      xIsNext = currentMove % 2 === 0;
+    } else {
+      xIsNext = currentMove % 2 === 1;
+    }
+  }
   // Check for winner
   const { gameWinner, subBoardWinners } = calculateWinner(currentBoards);
-
+  // Randomly determine if X or O moves first and set board to active
+  function handleFirstMoveSelection() {
+    setStartingPlayer(Math.random() < 0.5 ? 'X' : 'O');
+    setGameStarted(true);
+    // Reset the board
+    const emptyBoard = Array(9).fill(null).map(() => Array(9).fill(null));
+    setHistory([emptyBoard]);
+    setIsActive(null);
+  }
   
   function handleMove(subBoardIdx: number, squareIdx: number): void {
     const currentSubBoard = currentBoards[subBoardIdx];
     if (currentSubBoard[squareIdx] || // Blocks moves on filled squares
       subBoardWinners[subBoardIdx] || // Blocks moves on subboards that have been won
+      gameStarted === false || // Blocks moves when the game hasn't been started
       gameWinner) return; // Block moves when the game has been won
     //if (subBoardWinners[subBoardIdx]) return; // Block moves on won subboards
     if (isActive !== null && subBoardIdx !== isActive) return; // Block moves on non-active subboards
@@ -102,7 +121,14 @@ export default function Game() {
   if (gameWinner) {
     status = 'Winner: ' + gameWinner;
   } else {
-    status = 'Next player: ' + (xIsNext ? 'X' : 'O');
+    status = gameStarted ? 'Next player: ' + (xIsNext ? 'X' : 'O') : 'Click button below to start game!';
+  }
+
+  let gameControlContent;
+  if (!startingPlayer && !gameStarted) {
+    gameControlContent = <button className="btn-base" onClick={() => handleFirstMoveSelection()}>Who goes first?</button>
+  } else {
+    gameControlContent = <button className="btn-base " onClick={() => handleFirstMoveSelection()}>Restart Game</button>
   }
 
   // Create move list
@@ -116,7 +142,10 @@ export default function Game() {
   }
   moves = history.slice(1).map((board, move) => {
     const moveNumber = move + 1;
-    const player = (moveNumber % 2 === 1) ? 'O' : 'X';
+    const player = 
+    startingPlayer === 'X'
+    ? ((moveNumber % 2 === 1) ? 'X' : 'O')
+    : ((moveNumber % 2 === 0) ? 'O' : 'X');
     const prevBoard = history[moveNumber - 1];
     // TODO: Needs altering to account for the 3d arrays
     const moveCoordinates = getMoveCoordinates(prevBoard, board);
@@ -157,6 +186,9 @@ export default function Game() {
                 })}
               </div>
             ))}
+          </div>
+          <div className="game-control">
+            {gameControlContent}
           </div>
         </div>
         <div className="game-info">
