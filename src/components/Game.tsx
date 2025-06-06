@@ -75,10 +75,12 @@ export default function Game() {
   function handleFirstMoveSelection() {
     setStartingPlayer(Math.random() < 0.5 ? 'X' : 'O');
     setGameStarted(true);
+
     // Reset the board
     const emptyBoard = Array(9).fill(null).map(() => Array(9).fill(null));
     setHistory([emptyBoard]);
     setIsActive(null);
+    setCurrentMove(0);
   }
   
   function handleMove(subBoardIdx: number, squareIdx: number): void {
@@ -124,12 +126,10 @@ export default function Game() {
     status = gameStarted ? 'Next player: ' + (xIsNext ? 'X' : 'O') : 'Click button below to start game!';
   }
 
-  let gameControlContent;
-  if (!startingPlayer && !gameStarted) {
-    gameControlContent = <button className="btn-base" onClick={() => handleFirstMoveSelection()}>Who goes first?</button>
-  } else {
-    gameControlContent = <button className="btn-base " onClick={() => handleFirstMoveSelection()}>Restart Game</button>
-  }
+  // Determine contents of the game control button
+  const gameControlContent = <button className="btn-base" onClick={() => handleFirstMoveSelection()}>
+    {!startingPlayer && !gameStarted ? 'Who goes first?' : 'Restart Game'}
+    </button>;
 
   // Create move list
   let moves;
@@ -145,7 +145,7 @@ export default function Game() {
     const player = 
     startingPlayer === 'X'
     ? ((moveNumber % 2 === 1) ? 'X' : 'O')
-    : ((moveNumber % 2 === 0) ? 'O' : 'X');
+    : ((moveNumber % 2 === 1) ? 'O' : 'X');
     const prevBoard = history[moveNumber - 1];
     // TODO: Needs altering to account for the 3d arrays
     const moveCoordinates = getMoveCoordinates(prevBoard, board);

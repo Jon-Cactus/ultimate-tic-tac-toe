@@ -19,7 +19,7 @@
   --dark-background: #171c28;
   --player-1: #bae67e;
   --player-2: #ffae47;
-  --text: #f1d580;
+  --text: #ffcc66;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -83,6 +83,7 @@ h1 {
   width: fit-content;
   border: 1px solid var(--primary);
   padding: 0px;
+  margin: 0 0 10px 0;
 }
 
 .meta-board-row {
@@ -121,6 +122,19 @@ h1 {
   color: var(--player-2);
   background-color: var(--dark-background);
   border: 1px solid var(--primary);
+}
+
+.btn-base {
+  padding: 7px 10px;
+  font-size: 22px;
+  border: none;
+  border-radius: 5px;
+  background-color: var(--text);
+  cursor: pointer;
+}
+
+.btn-base:hover {
+  background-color: #a07d37;
 }
 
 .square:hover, .active:hover {
