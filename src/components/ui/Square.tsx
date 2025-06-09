@@ -1,4 +1,4 @@
-import type { SquareProps } from '../assets/interfaces';
+import type { SquareProps } from '../../assets/interfaces';
 
 export default function Square({ value, onSquareClick, active }: SquareProps) {
   const playerColor =

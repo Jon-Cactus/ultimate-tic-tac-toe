@@ -1,4 +1,4 @@
-import type {HistoryListProps} from '../assets/interfaces';
+import type {HistoryListProps} from '../../assets/interfaces';
 
 export default function HistoryList({ history, startingPlayer, currentMove, gameWinner, getMoveCoordinates}: HistoryListProps) {
     // Create move list

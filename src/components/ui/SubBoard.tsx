@@ -1,7 +1,7 @@
-import type { SubBoardProps } from '../assets/interfaces';
+import type { SubBoardProps } from '../../assets/interfaces';
 import Square from './Square';
 
-export default function SubBoard({ subBoardIdx, squares, onSquareClick, isActive, isWon }: SubBoardProps) {
+export default function SubBoard({ squares, onSquareClick, isActive, isWon }: SubBoardProps) {
   const playerColor =
     isWon === 'X'
     ? 'player-1 won'
@@ -20,7 +20,7 @@ export default function SubBoard({ subBoardIdx, squares, onSquareClick, isActive
                 key={squareIdx}
                 value={squares[squareIdx]}
                 onSquareClick={() => onSquareClick(squareIdx)}
-                active={subBoardIdx === isActive ? 'active' : ''}
+                active={isActive ? 'active' : ''}
               />
             )
           })}

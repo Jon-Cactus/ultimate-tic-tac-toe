@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import LocalGame from './components/LocalGame';
+import LocalGame from './components/Game';
 import './App.css';
 
 type Mode = 'local' | 'online' | null;
@@ -33,7 +33,6 @@ export default function App() {
     <div className="page">
       <Header />
       {mode === 'local' ? (<LocalGame />) : (<OnlineLobby />)}
-      <LocalGame />
     </div>
   )
 }

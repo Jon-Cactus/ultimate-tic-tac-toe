@@ -1,6 +1,8 @@
 import { useState } from 'react';
-import { calculateWinner } from '../utils/helpers';
-import Board from './Board';
+import { calculateWinner, getMoveCoordinates } from '../utils/helpers';
+import Board from './ui/Board';
+import HistoryList from './ui/HistoryList';
+import StatusBar from './ui/StatusBar';
 import '../App.css';
 
 export default function Game() {
@@ -72,14 +74,6 @@ export default function Game() {
     setHistory(nextHistory);
   }
 
-  // TODO: Still needed?
-  let status;
-  if (gameWinner) {
-    status = 'Winner: ' + gameWinner;
-  } else {
-    status = gameStarted ? 'Next player: ' + (xIsNext ? 'X' : 'O') : 'Click button below to start game!';
-  }
-
   // Determine contents of the game control button
   const gameControlContent = <button className="btn-base" onClick={() => handleFirstMoveSelection()}>
     {!startingPlayer && !gameStarted ? 'Who goes first?' : 'Restart Game'}
@@ -90,7 +84,7 @@ export default function Game() {
   return (
       <div className="game">
         <div className="board-container">
-          <div className="status">{status}</div>
+          <StatusBar gameWinner={gameWinner} xIsNext={xIsNext} gameStarted={gameStarted}></StatusBar>
           <Board 
             boards={currentBoards}
             activeSubBoard={isActive}
@@ -101,10 +95,13 @@ export default function Game() {
             {gameControlContent}
           </div>
         </div>
-        <div className="game-info">
-          <div className="current-move">Move #{`${currentMove + 1}`}</div>
-          <ol>{moves}</ol>
-        </div>
+        <HistoryList 
+          history={history}
+          startingPlayer={startingPlayer}
+          currentMove={currentMove}
+          gameWinner={gameWinner}
+          getMoveCoordinates={getMoveCoordinates}
+        />
       </div>
   );
 }

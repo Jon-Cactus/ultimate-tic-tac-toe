@@ -1,7 +1,7 @@
 import SubBoard from './SubBoard';
-import { BoardProps } from '../assets/interfaces';
+import type { BoardProps } from '../../assets/interfaces';
 
-export default function Board({ boards, activeSubBoard, onSquareClick, subBoardWinners}) {
+export default function Board({ boards, activeSubBoard, onSquareClick, subBoardWinners}: BoardProps) {
     return (
         <div className="meta-board">
           {Array.from({length: 3}, (_, row) => (
@@ -11,10 +11,9 @@ export default function Board({ boards, activeSubBoard, onSquareClick, subBoardW
                 return (
                   <SubBoard
                     key={idx}
-                    idx={idx}
                     squares={boards[idx]}
-                    onSquareClick={(squareIdx) => onSquareClick(idx, squareIdx)}
                     isActive={activeSubBoard === idx}
+                    onSquareClick={(squareIdx) => onSquareClick(idx, squareIdx)}
                     isWon={subBoardWinners[idx]}
                   />
                 );
