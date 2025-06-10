@@ -17,7 +17,7 @@ function Header() {
 export default function App() {
   // Control local/online play
   const [mode, setMode] = useState<Mode>(null);
-
+  
   if (mode === null) {
     return (
       <>

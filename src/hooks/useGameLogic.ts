@@ -1,4 +1,4 @@
-import { calculateWinner, getMoveCoordinates } from "../utils/helpers";
+import { calculateWinner, getMoveCoordinates } from "@shared/helpers";
 import { useState } from 'react';
 
 export function useGameLogic() {
