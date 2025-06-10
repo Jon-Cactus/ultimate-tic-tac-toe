@@ -1,0 +1,33 @@
+{
+  "name": "ultimate-tic-tac-toe-sever",
+  "version": "1.0.0",
+  "description": "Backend server for online Ultimate Tic-Tac-Toe",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jon-Cactus/ultimate-tic-tac-toe.git"
+  },
+  "keywords": [
+    "ultimate-tic-tac-toe",
+    "socket.io",
+    "typescript"
+  ],
+  "author": "Jonathan Spence",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Jon-Cactus/ultimate-tic-tac-toe/issues"
+  },
+  "homepage": "https://github.com/Jon-Cactus/ultimate-tic-tac-toe#readme",
+  "dependencies": {
+    "express": "^5.1.0",
+    "socket.io": "^4.8.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  }
+}
