@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import LocalGame from './components/Game';
+import LocalGame from './components/LocalGame';
 import './App.css';
 
 type Mode = 'local' | 'online' | null;

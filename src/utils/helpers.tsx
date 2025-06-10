@@ -33,15 +33,15 @@ export function calculateWinner(currentMetaBoard: (string | null)[][]): { gameWi
 
 export function getMoveCoordinates(
   prevBoard: (string | null)[][] | undefined,
-  currentBoard: (string | null)[][]
+  currBoard: (string | null)[][]
 ): (number[] | null) {
   if (!prevBoard) {
     return null;
   }
   for (let boardIdx: number = 0; boardIdx < 9; boardIdx++) {
-    if (prevBoard[boardIdx] && currentBoard[boardIdx]) {
+    if (prevBoard[boardIdx] && currBoard[boardIdx]) {
       for (let squareIdx: number = 0; squareIdx < 9; squareIdx++) {
-        if (prevBoard[boardIdx][squareIdx] !== currentBoard[boardIdx][squareIdx]) {
+        if (prevBoard[boardIdx][squareIdx] !== currBoard[boardIdx][squareIdx]) {
           return [boardIdx + 1, squareIdx + 1]
         }
       }
