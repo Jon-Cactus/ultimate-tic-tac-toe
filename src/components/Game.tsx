@@ -5,6 +5,7 @@ import type { GameProps } from '../assets/interfaces';
 import '../App.css';
 
 export default function Game(props: GameProps) {
+  // Unload props
   const {
     history, currentMove, activeSubBoard, currentBoards, startingPlayer,
     xIsNext, gameStarted, gameWinner, subBoardWinners,
@@ -19,9 +20,10 @@ export default function Game(props: GameProps) {
 
 
   return (
+    <>
+      <StatusBar gameWinner={gameWinner} xIsNext={xIsNext} gameStarted={gameStarted}></StatusBar>
       <div className="game">
         <div className="board-container">
-          <StatusBar gameWinner={gameWinner} xIsNext={xIsNext} gameStarted={gameStarted}></StatusBar>
           <Board 
             boards={currentBoards}
             activeSubBoard={activeSubBoard}
@@ -40,5 +42,6 @@ export default function Game(props: GameProps) {
           getMoveCoordinates={getMoveCoordinates}
         />
       </div>
+    </>
   );
 }

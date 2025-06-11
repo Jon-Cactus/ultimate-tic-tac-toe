@@ -1,8 +1,8 @@
-import {useState} from 'react';
+import { useState } from 'react';
+import { ModeContext } from './context/ModeContext';
+import type { Mode } from './context/ModeContext';
 import LocalGame from './components/LocalGame';
 import './App.css';
-
-type Mode = 'local' | 'online' | null;
 
 function Header() {
   return (
@@ -10,14 +10,12 @@ function Header() {
       <h1>Ultimate Tic-Tac-Toe</h1>
     </header>
   )
-  //<button className="nav-item"></button>
-  //<button className="nav-item"></button>
 }
 
 export default function App() {
   // Control local/online play
   const [mode, setMode] = useState<Mode>(null);
-  
+
   if (mode === null) {
     return (
       <>
@@ -30,9 +28,12 @@ export default function App() {
     )
   }
   return (
-    <div className="page">
-      <Header />
-      {mode === 'local' ? (<LocalGame />) : (<OnlineLobby />)}
-    </div>
+    <ModeContext.Provider value={mode}>
+      <div className="page">
+        <Header />
+        {mode === 'local' ? (<LocalGame />) : (<OnlineLobby />)}
+      </div>
+    </ModeContext.Provider>
+    
   )
 }
