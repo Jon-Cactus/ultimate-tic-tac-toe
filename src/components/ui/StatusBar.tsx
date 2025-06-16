@@ -1,4 +1,4 @@
-import type { StatusBarProps } from '../../assets/interfaces';
+import type { StatusBarProps } from '@shared/interfaces';
 import { useMode } from '../../context/ModeContext';
 
 export default function StatusBar({ gameWinner, xIsNext, gameStarted }: StatusBarProps) {

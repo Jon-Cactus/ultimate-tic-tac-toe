@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { ModeContext } from './context/ModeContext';
 import type { Mode } from './context/ModeContext';
 import LocalGame from './components/LocalGame';
+import OnlineLobby from './components/OnlineLobby';
 import './App.css';
 
 function Header() {

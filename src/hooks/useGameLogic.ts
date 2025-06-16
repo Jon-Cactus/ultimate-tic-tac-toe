@@ -34,19 +34,24 @@ export function useGameLogic() {
       setActiveSubBoard(null);
       setCurrentMove(0);
     }
-    
-    function handleMove(subBoardIdx: number, squareIdx: number): void {
+    // Validate moves
+    function isValidMove(subBoardIdx: number, squareIdx: number): boolean {
       const currentSubBoard = currentBoards[subBoardIdx];
       if (currentSubBoard[squareIdx] || // Blocks moves on filled squares
         subBoardWinners[subBoardIdx] || // Blocks moves on subboards that have been won
         gameStarted === false || // Blocks moves when the game hasn't been started
-        gameWinner) return; // Block moves when the game has been won
+        gameWinner) return false; // Block moves when the game has been won
       //if (subBoardWinners[subBoardIdx]) return; // Block moves on won subboards
-      if (activeSubBoard !== null && subBoardIdx !== activeSubBoard) return; // Block moves on non-active subboards
-    
+      if (activeSubBoard !== null && subBoardIdx !== activeSubBoard) return false; // Block moves on non-active subboards
+      return true;
+    }
+    // execute moves when valid
+    function handleMove(subBoardIdx: number, squareIdx: number): void {
+      if (!isValidMove(subBoardIdx, squareIdx)) return;
+      const currentSubBoard = currentBoards[subBoardIdx];
       const nextSubBoard = [...currentSubBoard];
       nextSubBoard[squareIdx] = xIsNext ? 'X' : 'O';
-    
+      
       const nextBoards = [...currentBoards];
       nextBoards[subBoardIdx] = nextSubBoard;
       // Grab updated winning boards based on new board state
@@ -63,6 +68,8 @@ export function useGameLogic() {
         setActiveSubBoard(squareIdx); 
       }
     }
+      
+    
     
     function jumpTo(nextMove: number): void {
       setCurrentMove(nextMove);
@@ -81,7 +88,13 @@ export function useGameLogic() {
         gameWinner,
         subBoardWinners,
         handleFirstMoveSelection,
+        isValidMove,
         handleMove,
-        getMoveCoordinates
+        getMoveCoordinates,
+        setHistory,
+        setCurrentMove,
+        setActiveSubBoard,
+        setStartingPlayer,
+        setGameStarted
     }
 } 

@@ -1,7 +1,7 @@
 import Board from './ui/Board';
 import HistoryList from './ui/HistoryList';
 import StatusBar from './ui/StatusBar';
-import type { GameProps } from '../assets/interfaces';
+import type { GameProps } from '@shared/interfaces';
 import '../App.css';
 
 export default function Game(props: GameProps) {
@@ -20,7 +20,7 @@ export default function Game(props: GameProps) {
 
 
   return (
-    <>
+    <div className="container">
       <StatusBar gameWinner={gameWinner} xIsNext={xIsNext} gameStarted={gameStarted}></StatusBar>
       <div className="game">
         <div className="board-container">
@@ -42,6 +42,6 @@ export default function Game(props: GameProps) {
           getMoveCoordinates={getMoveCoordinates}
         />
       </div>
-    </>
+    </div>
   );
 }

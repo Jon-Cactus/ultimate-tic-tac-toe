@@ -1,3 +1,4 @@
+// Props
 export interface GameProps {
     history: ('X' | 'O' | null)[][][];
     currentMove: number;
@@ -45,4 +46,23 @@ export interface StatusBarProps {
     gameWinner: string | null;
     xIsNext: boolean;
     gameStarted: boolean;
+}
+
+export interface OnlineGameProps {
+    action: 'host' | 'join';
+    roomId: string | undefined;
+}
+// Server
+export interface GameState {
+    history: ('X' | 'O' | null)[][][];
+    currentMove: number;
+    activeSubBoard: number | null;
+    startingPlayer: 'X' | 'O';
+}
+
+export interface MakeMove {
+    roomId: string;
+    subBoardIdx: number;
+    squareIdx: number;
+    player: 'X' | 'O';
 }
