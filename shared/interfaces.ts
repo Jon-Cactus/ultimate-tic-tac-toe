@@ -1,3 +1,5 @@
+import type { Socket } from 'socket.io-client';
+
 // Props
 export interface GameProps {
     history: ('X' | 'O' | null)[][][];
@@ -49,8 +51,9 @@ export interface StatusBarProps {
 }
 
 export interface OnlineGameProps {
-    action: 'host' | 'join';
     roomId: string | undefined;
+    socket: Socket;
+    player: 'X' | 'O' | null;
 }
 // Server
 export interface GameState {

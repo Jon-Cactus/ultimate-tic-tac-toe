@@ -1,24 +1,18 @@
 import { useEffect, useRef } from 'react';
-import io, { Socket } from 'socket.io-client';
+import type { Socket } from 'socket.io-client';
 import Game from './Game';
 import { useGameLogic } from '../hooks/useGameLogic';
 import type { OnlineGameProps } from '@shared/interfaces';
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
 
-export default function OnlineGame({ action, roomId }: OnlineGameProps) {
+export default function OnlineGame({ roomId, socket, player }: OnlineGameProps) {
     const logic = useGameLogic();
-    const socketRef = useRef<Socket>(null);
+    const socketRef = useRef<Socket>(socket);
 
     useEffect(() => {
-        const socket = io( BACKEND_URL, {});
-        socketRef.current = socket;
+        const s = socketRef.current;
 
-        socket.on('connect', () => {
-            console.log('[socket] connected, id=', socket.id);
-        });
-
-        socket.on('startGame', (data) => {
+        s.on('startGame', (data) => {
             logic.setHistory(data.history);
             logic.setCurrentMove(data.currentMove);
             logic.setActiveSubBoard(data.activeSubBoard);
@@ -26,7 +20,7 @@ export default function OnlineGame({ action, roomId }: OnlineGameProps) {
             logic.setGameStarted(true);
         });
 
-        socket.on('moveMade', (data) => {
+        s.on('moveMade', (data) => {
             logic.setHistory(data.history);
             logic.setCurrentMove(data.currentMove);
             logic.setActiveSubBoard(data.activeSubBoard);
@@ -35,25 +29,20 @@ export default function OnlineGame({ action, roomId }: OnlineGameProps) {
         socket.connect();        
         
         return () => {
-            socket.disconnect();
+            s.off('startGame');
+            s.off('moveMade');
         };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [action, roomId]);
+    }, []);
 
-    const onlineMove = (subBoardIdx: number, squareIdx: number) => {
-        if (!socketRef.current || !roomId) return;
+    const handleOnlineClick = (subBoardIdx: number, squareIdx: number) => {
+        if (!logic.isValidMove(subBoardIdx, squareIdx) || !socketRef.current || !player) return; // Validate before sending to server
         socketRef.current.emit('makeMove', {
             roomId,
             subBoardIdx,
             squareIdx,
-            player: logic.xIsNext ? 'X' : 'O',
+            player
         });
     };
-
-    const handleOnlineClick = (subBoardIdx: number, squareIdx: number) => {
-        if (!logic.isValidMove(subBoardIdx, squareIdx) || !socketRef.current) return; // Validate before sending to server
-        onlineMove(subBoardIdx, squareIdx);
-    }
 
     return (
         <Game

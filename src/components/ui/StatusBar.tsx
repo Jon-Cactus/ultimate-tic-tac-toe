@@ -1,8 +1,9 @@
 import type { StatusBarProps } from '@shared/interfaces';
-import { useMode } from '../../context/ModeContext';
+import { useMode, usePlayer } from '../../context/Context';
 
 export default function StatusBar({ gameWinner, xIsNext, gameStarted }: StatusBarProps) {
     const mode = useMode();
+    const player = usePlayer();
 
     const text = gameWinner 
     ? `Winner: ${gameWinner}`
@@ -13,6 +14,9 @@ export default function StatusBar({ gameWinner, xIsNext, gameStarted }: StatusBa
     : 'Click button below to start game!';
 
     return (
-        <div className="status">{text}</div>
+        <div className="status">
+            <span>You are: {player}</span>
+            <span>{text}</span>
+        </div>
     )
 }

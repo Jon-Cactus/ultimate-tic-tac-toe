@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { ModeContext } from './context/ModeContext';
-import type { Mode } from './context/ModeContext';
+import { ModeContext } from './context/Context';
+import type { Mode } from './context/Context';
 import LocalGame from './components/LocalGame';
 import OnlineLobby from './components/OnlineLobby';
 import './App.css';

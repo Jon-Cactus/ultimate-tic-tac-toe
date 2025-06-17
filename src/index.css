@@ -61,6 +61,7 @@ h1 {
 }
 
 .status {
+  display: block;
   padding: 15px;
   margin: 85px auto 0px auto;
   width: 90%;
