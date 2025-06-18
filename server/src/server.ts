@@ -2,7 +2,7 @@ import express from 'express';
 import http from 'http';
 import { Server } from 'socket.io';
 import cors from 'cors';
-import { calculateWinner } from '@shared/helpers';
+import { calculateWinner } from '@shared/gameLogic/helpers';
 import type { GameState, MakeMove } from '@shared/interfaces';
 
 // Environment setup
@@ -20,16 +20,6 @@ const io = new Server(server, {
 // Object for room state
 const rooms: Record<string, GameState> = {};
 const playerRoles: Record<string, Record<string, 'X' | 'O'>> = {};
-
-// Initialize a new game
-function initGame(): GameState {
-    return {
-        history: [Array(9).fill(null).map(() => Array(9).fill(null))],
-        currentMove: 0,
-        activeSubBoard: null,
-        startingPlayer: Math.random() < 0.5 ? 'X' : 'O'
-    };    
-}
 
 // Socket logic
 io.on('connection', (socket) => {

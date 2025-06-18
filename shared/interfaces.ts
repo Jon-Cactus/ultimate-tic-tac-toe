@@ -1,16 +1,21 @@
 import type { Socket } from 'socket.io-client';
 
+export type Player = 'X' | 'O';
+export type Cell = string | null;
+export type SubBoard = Cell[];
+export type Board = SubBoard[];
+
 // Props
 export interface GameProps {
-    history: ('X' | 'O' | null)[][][];
+    history: Board[];
     currentMove: number;
     activeSubBoard: number | null;
-    currentBoards: (string | null)[][];
-    startingPlayer: 'X' | 'O' | null;
+    currentBoards: SubBoard[];
+    startingPlayer: Player | null;
     xIsNext: boolean;
     gameStarted: boolean;
     gameWinner: string | null;
-    subBoardWinners: (string | null)[];
+    subBoardWinners: SubBoard[];
     onFirstMoveSelection: () => void;
     onSquareClick: (subBoardIdx: number, squareIdx: number) => void;
     getMoveCoordinates: (prevBoard: (string | null)[][], currBoard: (string | null)[][]) => number[] | null;
@@ -57,15 +62,15 @@ export interface OnlineGameProps {
 }
 // Server
 export interface GameState {
-    history: ('X' | 'O' | null)[][][];
+    history: Board[];
     currentMove: number;
     activeSubBoard: number | null;
-    startingPlayer: 'X' | 'O';
+    startingPlayer: Player;
 }
 
 export interface MakeMove {
     roomId: string;
     subBoardIdx: number;
     squareIdx: number;
-    player: 'X' | 'O';
+    player: Player;
 }

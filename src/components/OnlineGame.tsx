@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import type { Socket } from 'socket.io-client';
 import Game from './Game';
-import { useGameLogic } from '../hooks/useGameLogic';
+import { useGameLogic } from '@shared/hooks/useGameLogic';
 import type { OnlineGameProps } from '@shared/interfaces';
 
 

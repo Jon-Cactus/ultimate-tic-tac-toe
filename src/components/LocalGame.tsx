@@ -1,5 +1,5 @@
 import Game  from './Game';
-import { useGameLogic } from '../hooks/useGameLogic';
+import { useGameLogic } from '@shared/hooks/useGameLogic';
 
 export default function LocalGame() {
     const logic = useGameLogic();

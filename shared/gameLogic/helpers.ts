@@ -1,22 +1,24 @@
-export function calculateWinner(currentMetaBoard: (string | null)[][]): { gameWinner: string | null; subBoardWinners: (string | null)[] }  {
+import { Board, Cell } from '../interfaces';
+
+export function calculateWinner(
+  board: Board): { gameWinner: string | null; subBoardWinners: (string | null)[] }  {
   const lines = [
     [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
     [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
     [0, 4, 8], [2, 4, 6]             // Diagonals
   ];
-  const subBoardWinners = currentMetaBoard.map(subBoard => {
+  const subBoardWinners = board.map(subBoard => {
     for (let i: number = 0; i < lines.length; i++) {
       const [a, b, c] = lines[i];
       if (subBoard[a] && subBoard[a] === subBoard[b] && subBoard[a] === subBoard[c]) {
         return subBoard[a];
       }
     }
-    if (!subBoard.includes(null)) {
-      return 'draw';
-    }
+    if (!subBoard.includes(null)) return 'draw';
     return null;
-  })
-  let gameWinner = null;
+  });
+
+  let gameWinner: Cell = null;
   for (let i: number = 0; i < lines.length; i++) {
     const [a, b, c] = lines[i];
     if (subBoardWinners[a] && subBoardWinners[a] === subBoardWinners[b] && subBoardWinners[a] === subBoardWinners[c]) {

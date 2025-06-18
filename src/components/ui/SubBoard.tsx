@@ -1,4 +1,4 @@
-import type { SubBoardProps } from '../../assets/interfaces';
+import type { SubBoardProps } from '@shared/interfaces';
 import Square from './Square';
 
 export default function SubBoard({ squares, onSquareClick, isActive, isWon }: SubBoardProps) {
