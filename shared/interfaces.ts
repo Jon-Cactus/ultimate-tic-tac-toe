@@ -1,7 +1,7 @@
 import type { Socket } from 'socket.io-client';
 
 export type Player = 'X' | 'O';
-export type Cell = string | null;
+export type Cell = Player | null;
 export type SubBoard = Cell[];
 export type Board = SubBoard[];
 
@@ -10,43 +10,40 @@ export interface GameProps {
     history: Board[];
     currentMove: number;
     activeSubBoard: number | null;
-    currentBoards: SubBoard[];
+    currentBoard: Board;
     startingPlayer: Player | null;
     xIsNext: boolean;
-    gameStarted: boolean;
     gameWinner: string | null;
-    subBoardWinners: SubBoard[];
+    subBoardWinners: (string | null)[];
     onFirstMoveSelection: () => void;
     onSquareClick: (subBoardIdx: number, squareIdx: number) => void;
-    getMoveCoordinates: (prevBoard: (string | null)[][], currBoard: (string | null)[][]) => number[] | null;
 }
 
 export interface BoardProps {
-    boards: (string | null)[][];
+    boards: Board;
     activeSubBoard: number | null;
     onSquareClick: (idx: number, squareIdx: number) => void;
     subBoardWinners: (string | null)[];
 }
 
 export interface SubBoardProps {
-    squares: (string | null)[];
+    squares: SubBoard;
     onSquareClick: (squareIdx: number) => void;
     isActive: boolean | null;
     isWon: string | null;
 }
 
 export interface SquareProps {
-    value: string | null;
+    value: Player | null;
     onSquareClick: () => void;
     active: string;
 }
 
 export interface HistoryListProps {
-    history: ('X' | 'O' | null)[][][];
-    startingPlayer: ('X' | 'O' | null);
+    history: Board[];
+    startingPlayer: (Player | null);
     currentMove: number;
     gameWinner: string | null;
-    getMoveCoordinates: (prevBoard: ('X' | 'O' | null)[][], currentBoard: ('X' | 'O' | null)[][]) => number[] | null;
 }
 
 export interface StatusBarProps {
@@ -58,7 +55,7 @@ export interface StatusBarProps {
 export interface OnlineGameProps {
     roomId: string | undefined;
     socket: Socket;
-    player: 'X' | 'O' | null;
+    player: Player | null;
 }
 // Server
 export interface GameState {

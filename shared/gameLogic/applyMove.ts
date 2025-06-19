@@ -1,11 +1,11 @@
 import { calculateWinner } from './helpers';
-import { GameState, Board } from '../interfaces';
+import type { GameState, Board, Player } from '../interfaces';
 
 export function applyMove(
     state: GameState,
     subBoardIdx: number,
     squareIdx: number,
-    player: string
+    player: Player,
 ): GameState {
     const history = state.history.slice(0, state.currentMove + 1);
     const currentBoard = history[state.currentMove];
@@ -17,7 +17,7 @@ export function applyMove(
     const nextHistory = [...history, nextBoard];
     const nextMove = nextHistory.length - 1;
     // Calculate winners
-    const { gameWinner, subBoardWinners } = calculateWinner(nextBoard)
+    const { subBoardWinners } = calculateWinner(nextBoard)
     // Determine next active subboard
     const nextActive = subBoardWinners[squareIdx] !== null ? null : squareIdx;
 

@@ -1,4 +1,4 @@
-import { Board, Cell } from '../interfaces';
+import type { Board, Player} from '../interfaces';
 
 export function calculateWinner(
   board: Board): { gameWinner: string | null; subBoardWinners: (string | null)[] }  {
@@ -18,7 +18,7 @@ export function calculateWinner(
     return null;
   });
 
-  let gameWinner: Cell = null;
+  let gameWinner: Player | string | null = null;
   for (let i: number = 0; i < lines.length; i++) {
     const [a, b, c] = lines[i];
     if (subBoardWinners[a] && subBoardWinners[a] === subBoardWinners[b] && subBoardWinners[a] === subBoardWinners[c]) {

@@ -1,8 +1,8 @@
-import { GameState } from '../interfaces';
+import type { GameState } from '../interfaces';
 import { calculateWinner } from './helpers';
 
 // Validate moves
-export function isValidMove(
+export function validateMove(
     state: GameState,
     subBoardIdx: number,
     squareIdx: number,

@@ -91,11 +91,14 @@ h1 {
   flex-shrink: 0; 
   justify-content: center;
   margin-top: 100px;
+  border: 1px solid red;
 }
 
 .game-info {
+  display: flex;
+  flex-direction: column;
   position: relative;
-  height: auto;
+  height: 450px;
   min-width: 250px;
   margin: 0 0 0 250px;
   overflow-y: auto;
@@ -103,17 +106,22 @@ h1 {
   border: 3px solid var(--secondary);
 }
 
-.game-info::-webkit-scrollbar {
+.move-list-wrapper {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.move-list-wrapper::-webkit-scrollbar {
   width: 8px;
 }
-.game-info::-webkit-scrollbar-track {
+.move-list-wrapper::-webkit-scrollbar-track {
   background: var(--background);
 }
-.game-info::-webkit-scrollbar-thumb {
+.move-list-wrapper::-webkit-scrollbar-thumb {
   background: var(--light-background);
   border-radius: 4px;
 }
-.game-info::-webkit-scrollbar-thumb:hover {
+.move-list-wrapper::-webkit-scrollbar-thumb:hover {
   background: var(--text);
 }
 
@@ -123,7 +131,6 @@ h1 {
   text-align: center;
   color: var(--dark-background);
   background-color: var(--secondary);
-  z-index: 1;
 }
 
 

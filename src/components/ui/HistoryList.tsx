@@ -1,6 +1,7 @@
 import type {HistoryListProps} from '@shared/interfaces';
+import { getMoveCoordinates } from '@shared/gameLogic/helpers';
 
-export default function HistoryList({ history, startingPlayer, currentMove, gameWinner, getMoveCoordinates}: HistoryListProps) {
+export default function HistoryList({ history, startingPlayer, currentMove, gameWinner }: HistoryListProps) {
     // Create move list
     let moves;
     if (history.length === 1) {
@@ -36,7 +37,9 @@ export default function HistoryList({ history, startingPlayer, currentMove, game
     return (
         <div className="game-info">
           <div className="current-move">Move #{`${currentMove + 1}`}</div>
-          <ol>{moves}</ol>
+          <div className="move-list-wrapper">
+            <ol>{moves}</ol>
+          </div>
         </div>
     )
 }

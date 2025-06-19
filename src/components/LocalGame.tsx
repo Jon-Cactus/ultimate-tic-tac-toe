@@ -3,21 +3,20 @@ import { useGameLogic } from '@shared/hooks/useGameLogic';
 
 export default function LocalGame() {
     const logic = useGameLogic();
+    const player = logic.xIsNext ? 'X' : 'O';
 
     return (
         <Game
             history={logic.history}
             currentMove={logic.currentMove}
             activeSubBoard={logic.activeSubBoard}
-            currentBoards={logic.currentBoards}
+            currentBoard={logic.currentBoard}
             startingPlayer={logic.startingPlayer}
             xIsNext={logic.xIsNext}
-            gameStarted={logic.gameStarted}
             gameWinner={logic.gameWinner}
             subBoardWinners={logic.subBoardWinners}
             onFirstMoveSelection={logic.handleFirstMoveSelection}
-            onSquareClick={logic.handleMove}
-            getMoveCoordinates={logic.getMoveCoordinates}
+            onSquareClick={(sb, sq) => logic.handleMove(sb, sq, player!)}
         />
     )
 }

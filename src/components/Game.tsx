@@ -7,31 +7,33 @@ import '../App.css';
 export default function Game(props: GameProps) {
   // Unload props
   const {
-    history, currentMove, activeSubBoard, currentBoards, startingPlayer,
-    xIsNext, gameStarted, gameWinner, subBoardWinners,
-    onFirstMoveSelection, onSquareClick, getMoveCoordinates 
+    history,
+    currentMove,
+    activeSubBoard,
+    startingPlayer,
+    xIsNext,
+    currentBoard,
+    gameWinner,
+    subBoardWinners, 
+    onFirstMoveSelection,
+    onSquareClick,
    } = props
-
-  // Determine contents of the game control button
-  const gameControlContent = <button className="btn-base" onClick={() => onFirstMoveSelection()}>
-    {!startingPlayer && !gameStarted ? 'Who goes first?' : 'Restart Game'}
-    </button>;
-
-
 
   return (
     <div className="container">
-      <StatusBar gameWinner={gameWinner} xIsNext={xIsNext} gameStarted={gameStarted}></StatusBar>
+      <StatusBar gameWinner={gameWinner} xIsNext={xIsNext} gameStarted={!!startingPlayer}></StatusBar>
       <div className="game">
         <div className="board-container">
           <Board 
-            boards={currentBoards}
+            boards={currentBoard}
             activeSubBoard={activeSubBoard}
             onSquareClick={onSquareClick}
             subBoardWinners={subBoardWinners}
           />
           <div className="game-control">
-            {gameControlContent}
+            <button className="btn-base" onClick={onFirstMoveSelection}>
+              {!startingPlayer ? 'Who goes first?' : 'Restart Game'}
+            </button>
           </div>
         </div>
         <HistoryList 
@@ -39,7 +41,6 @@ export default function Game(props: GameProps) {
           startingPlayer={startingPlayer}
           currentMove={currentMove}
           gameWinner={gameWinner}
-          getMoveCoordinates={getMoveCoordinates}
         />
       </div>
     </div>
