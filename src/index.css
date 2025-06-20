@@ -73,6 +73,10 @@ h1 {
   background-color: var(--dark-background);
 }
 
+.status-text {
+  display: block;
+}
+
 .notification {
   background-color: var(--light-background);
   border-radius: 7px;

@@ -6,7 +6,7 @@ export function validateMove(
     state: GameState,
     subBoardIdx: number,
     squareIdx: number,
-    player: string
+    player: string | null
   ): boolean {
     const { history, currentMove, activeSubBoard, startingPlayer } = state;
     const currentBoard = history[currentMove]; // Retrieve current snapshot

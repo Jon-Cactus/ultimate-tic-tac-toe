@@ -1,22 +1,36 @@
 import type { StatusBarProps } from '@shared/interfaces';
 import { useMode, usePlayer } from '../../context/Context';
 
-export default function StatusBar({ gameWinner, xIsNext, gameStarted }: StatusBarProps) {
+export default function StatusBar({ gameWinner, xIsNext, isHost, guestJoined, roomId }: StatusBarProps) {
     const mode = useMode();
     const player = usePlayer();
+    const waitingForGuest = isHost && !guestJoined;
 
     const text = gameWinner 
     ? `Winner: ${gameWinner}`
-    : gameStarted
-    ? `Next player: ${xIsNext ? 'X' : 'O'}`
-    : mode === 'local'
-    ? 'Decide who will be X and O, then click the button below to start game!'
-    : 'Click button below to start game!';
+    : `Next player: ${xIsNext ? 'X' : 'O'}`
+
+    if (mode === 'local') return (
+        <div className="status">
+            <span className="status-text">{text}</span>
+        </div>
+    )
 
     return (
         <div className="status">
-            <span>You are: {player}</span>
-            <span>{text}</span>
+            {waitingForGuest && (
+                <span className="status-text">
+                    <p>
+                        Share this Room ID with your friend to join: <code>{roomId}</code>
+                    </p>
+                </span>
+            )}
+            {!waitingForGuest && (
+                <>
+                    <span className="status-text">{`You are: ${player}`}</span>
+                    <span className="status-text">{text}</span>
+                </>
+            )}
         </div>
     )
 }

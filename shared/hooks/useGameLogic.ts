@@ -1,17 +1,16 @@
 import { useState } from 'react';
 import { calculateWinner, getMoveCoordinates } from '../gameLogic/helpers';
-import { initGame } from '../gameLogic/initGame'
-import { validateMove } from '../gameLogic/validateMove';
-import { applyMove } from '../gameLogic/applyMove';
+import { initGame, validateMove, applyMove } from '../gameLogic/';
 import type { GameState, Player } from '../interfaces';
 
 export function useGameLogic() {
     const [gameState, setGameState] = useState<GameState>(initGame());
+    const syncState = (next: GameState) => setGameState(next);
     
     // Restart or begin game
     const handleFirstMoveSelection = () => setGameState(initGame());
     // Determine validity of potential move
-    const isValidMove = (subBoardIdx: number, squareIdx: number, player: Player) =>
+    const isValidMove = (subBoardIdx: number, squareIdx: number, player: Player | null) =>
       validateMove(gameState, subBoardIdx, squareIdx, player);
     
     // execute moves when valid
@@ -42,5 +41,6 @@ export function useGameLogic() {
         handleFirstMoveSelection,
         handleMove,
         getMoveCoordinates,
+        syncState
     };
 } 

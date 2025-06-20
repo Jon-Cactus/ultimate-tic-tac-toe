@@ -17,6 +17,9 @@ export interface GameProps {
     subBoardWinners: (string | null)[];
     onFirstMoveSelection: () => void;
     onSquareClick: (subBoardIdx: number, squareIdx: number) => void;
+    isHost: boolean;
+    guestJoined: boolean;
+    roomId: string | undefined;
 }
 
 export interface BoardProps {
@@ -49,13 +52,18 @@ export interface HistoryListProps {
 export interface StatusBarProps {
     gameWinner: string | null;
     xIsNext: boolean;
-    gameStarted: boolean;
+    shareRoomId?: string;
+    waitingForGuest?: boolean;
+    isHost: boolean;
+    guestJoined: boolean;
+    roomId: string | undefined;
 }
 
 export interface OnlineGameProps {
     roomId: string | undefined;
     socket: Socket;
-    player: Player | null;
+    isHost: boolean;
+    guestJoined: boolean;
 }
 // Server
 export interface GameState {

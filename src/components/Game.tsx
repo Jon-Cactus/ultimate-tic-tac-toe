@@ -17,11 +17,20 @@ export default function Game(props: GameProps) {
     subBoardWinners, 
     onFirstMoveSelection,
     onSquareClick,
+    isHost,
+    guestJoined,
+    roomId
    } = props
 
   return (
     <div className="container">
-      <StatusBar gameWinner={gameWinner} xIsNext={xIsNext} gameStarted={!!startingPlayer}></StatusBar>
+      <StatusBar
+        gameWinner={gameWinner}
+        xIsNext={xIsNext}
+        isHost={isHost}
+        guestJoined={guestJoined}
+        roomId={roomId}
+      />
       <div className="game">
         <div className="board-container">
           <Board 
@@ -32,7 +41,7 @@ export default function Game(props: GameProps) {
           />
           <div className="game-control">
             <button className="btn-base" onClick={onFirstMoveSelection}>
-              {!startingPlayer ? 'Who goes first?' : 'Restart Game'}
+              Restart Game
             </button>
           </div>
         </div>

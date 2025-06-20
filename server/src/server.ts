@@ -2,7 +2,9 @@ import express from 'express';
 import http from 'http';
 import { Server } from 'socket.io';
 import cors from 'cors';
-import { calculateWinner } from '@shared/gameLogic/helpers';
+import { initGame } from '@shared/gameLogic/initGame';
+import { validateMove } from '@shared/gameLogic/validateMove';
+import { applyMove } from '@shared/gameLogic/applyMove';
 import type { GameState, MakeMove } from '@shared/interfaces';
 
 // Environment setup
@@ -19,58 +21,42 @@ const io = new Server(server, {
 
 // Object for room state
 const rooms: Record<string, GameState> = {};
-const playerRoles: Record<string, Record<string, 'X' | 'O'>> = {};
 
 // Socket logic
 io.on('connection', (socket) => {
     console.log('[server] client connected', socket.id);
 
     // Host creates room
-    socket.on('createGame', (callback: (res: { roomId: string; player: 'X' | 'O' }) => void) => {
+    socket.on('createGame', callback => {
         const roomId = Math.random().toString(36).substring(2, 8) // Generate random string of nums and chars
         const state = initGame(); // Create game state object
         rooms[roomId] = state;
         // Set host as either X or O
-        playerRoles[roomId] = { [socket.id]: state.startingPlayer };
         socket.join(roomId);
         callback({ roomId, player: state.startingPlayer });
         // Send initial game state to host client
         socket.emit('startGame', state);
     });
     // Guest joins room
-    socket.on('joinGame', ({ roomId }: { roomId: string }, callback: ( res: { error?: string; player?: 'X' | 'O' }) => void) => {
+    socket.on('joinGame', ({ roomId }, callback) => {
         const state = rooms[roomId];
-        if (!state) callback({ error: 'Room not found' });
-        const taken = Object.values(playerRoles[roomId])[0];
+        if (!state) return callback({ error: 'Room not found' });
+        const taken = state.startingPlayer;
         const open = taken === 'X' ? 'O' : 'X';
-        playerRoles[roomId][socket.id]
         socket.join(roomId);
-        socket.emit('startGame', state);
         callback({ player: open });
+        socket.emit('startGame', state);
+        socket.to(roomId).emit('guestJoined');
     });
     // Handle moves
-    socket.on('makeMove', ({ roomId, subBoardIdx, squareIdx, player }: MakeMove) =>{
-        const state = rooms[roomId];
+    socket.on('makeMove', (move: MakeMove) =>{
+        const state = rooms[move.roomId];
         if (!state) return;
 
-        const history = state.history.slice(0, state.currentMove + 1);
-        const currentBoards = history[state.currentMove];
-        // create shallow copy
-        const nextBoards = currentBoards.map(board => [...board]);
-        const nextSubBoard = [...nextBoards[subBoardIdx]];
-        nextSubBoard[squareIdx] = player;
-        nextBoards[subBoardIdx] = nextSubBoard;
-
-        const { subBoardWinners: nextSubBoardWinners } = calculateWinner(nextBoards);
-
-        const nextMove = history.length;
-        const activeSubBoard = nextSubBoardWinners[squareIdx] ? null : squareIdx;
-
-        state.history = [...history, nextBoards];
-        state.currentMove = nextMove;
-        state.activeSubBoard = activeSubBoard;
-
-        io.in(roomId).emit('moveMade', state);
+        if (!validateMove(state, move.subBoardIdx, move.squareIdx, move.player)) return;
+        const nextState = applyMove(state, move.subBoardIdx, move.squareIdx, move.player);
+        rooms[move.roomId] = nextState;
+        io.in(move.roomId).emit('moveMade', nextState);
     });
 
     socket.on('disconnect', () => {

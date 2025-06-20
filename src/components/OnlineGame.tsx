@@ -1,33 +1,22 @@
-import { useEffect, useRef } from 'react';
-import type { Socket } from 'socket.io-client';
+import { useEffect, useRef, useContext } from 'react';
 import Game from './Game';
 import { useGameLogic } from '@shared/hooks/useGameLogic';
+import { PlayerContext } from '../context/Context.ts';
 import type { OnlineGameProps } from '@shared/interfaces';
+import type { Socket } from 'socket.io-client';
 
 
-export default function OnlineGame({ roomId, socket, player }: OnlineGameProps) {
+
+export default function OnlineGame({ roomId, socket, isHost, guestJoined }: OnlineGameProps) {
     const logic = useGameLogic();
+    const player = useContext(PlayerContext);
     const socketRef = useRef<Socket>(socket);
 
     useEffect(() => {
         const s = socketRef.current;
-
-        s.on('startGame', (data) => {
-            logic.setHistory(data.history);
-            logic.setCurrentMove(data.currentMove);
-            logic.setActiveSubBoard(data.activeSubBoard);
-            logic.setStartingPlayer(data.startingPlayer);
-            logic.setGameStarted(true);
-        });
-
-        s.on('moveMade', (data) => {
-            logic.setHistory(data.history);
-            logic.setCurrentMove(data.currentMove);
-            logic.setActiveSubBoard(data.activeSubBoard);
-        });
-
+        s.on('startGame', (data) => logic.syncState(data));
+        s.on('moveMade', (data) => logic.syncState(data));
         socket.connect();        
-        
         return () => {
             s.off('startGame');
             s.off('moveMade');
@@ -35,11 +24,11 @@ export default function OnlineGame({ roomId, socket, player }: OnlineGameProps) 
     }, []);
 
     const handleOnlineClick = (subBoardIdx: number, squareIdx: number) => {
-        if (!logic.isValidMove(subBoardIdx, squareIdx) || !socketRef.current || !player) return; // Validate before sending to server
+        if (!logic.isValidMove(subBoardIdx, squareIdx, player)) return; // Validate before sending to server
         socketRef.current.emit('makeMove', {
             roomId,
-            subBoardIdx,
-            squareIdx,
+            subBoardIdx: subBoardIdx,
+            squareIdx: squareIdx,
             player
         });
     };
@@ -49,16 +38,16 @@ export default function OnlineGame({ roomId, socket, player }: OnlineGameProps) 
             history={logic.history}
             currentMove={logic.currentMove}
             activeSubBoard={logic.activeSubBoard}
-            currentBoards={logic.currentBoards}
+            currentBoard={logic.currentBoard}
             startingPlayer={logic.startingPlayer}
             xIsNext={logic.xIsNext}
-            gameStarted={logic.gameStarted}
             gameWinner={logic.gameWinner}
             subBoardWinners={logic.subBoardWinners}
             onFirstMoveSelection={logic.handleFirstMoveSelection}
             onSquareClick={handleOnlineClick}
-            getMoveCoordinates={logic.getMoveCoordinates}
+            isHost={isHost}
+            guestJoined={guestJoined}
+            roomId={roomId}
         />
     )
-
 }

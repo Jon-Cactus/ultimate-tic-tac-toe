@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import io, { Socket } from 'socket.io-client';
 import OnlineGame from './OnlineGame';
 import { PlayerContext } from '../context/Context';
@@ -9,8 +9,8 @@ export default function OnlineLobby() {
     const [socket] = useState<Socket>(() => io(BACKEND_URL, { autoConnect: false }));
     const [action, setAction] = useState<'host' | 'join' | null>(null);
     const [roomId, setRoomId] = useState<string>('');
-    const [ready, setReady] = useState<boolean>(false);
     const [player, setPlayer] = useState<'X' | 'O' | null>(null);
+    const [guestJoined, setGuestJoined] = useState<boolean>(false);
 
     // Host flow
     const handleHost = () => {
@@ -29,10 +29,22 @@ export default function OnlineLobby() {
             else {
                 setAction('join');
                 setPlayer(res.player);
-                setReady(true);
+                setGuestJoined(true); // POTENTIAL PROBLEM HERE
             }
         });
     };
+
+    useEffect(() => {
+        if (action === 'host') {
+            socket.on('guestJoined', () => {
+                setGuestJoined(true);
+            });
+        }
+        return () => {
+            socket.off('guestJoined');
+        }
+    }, [action, socket])
+    
 
     if (!action) {
         return (
@@ -44,33 +56,18 @@ export default function OnlineLobby() {
                     <input 
                         placeholder="Room ID to join"
                         value={roomId}
-                        onChange={(e) => setRoomId(e.currentTarget.value)}
+                        onChange={(e) => setRoomId(e.target.value)}
                     />
                     <button className="btn-base" onClick={handleJoin} disabled={!roomId}>Join Game</button>
                 </div>
             </div>
         )
     }
-    
-    if (action === 'host' && !ready) {
-        return (
-            <div className="status">
-                <div>
-                    Your room ID is 
-                    <span className="notification"> {roomId}</span>
-                    . Please share with the other player!
-                </div>
-                <button className="btn-base" onClick={() => setReady(true)}>
-                    Enter Game
-                </button>
-            </div>
-        );
-    }
 
-    if (ready) {
+    if (action && player) {
         return (
             <PlayerContext.Provider value={player}>
-                <OnlineGame roomId={roomId} socket={socket} player={player} />;
+                <OnlineGame roomId={roomId} socket={socket} isHost={action === 'host'} guestJoined={guestJoined} />;
             </PlayerContext.Provider>
         )
     }
