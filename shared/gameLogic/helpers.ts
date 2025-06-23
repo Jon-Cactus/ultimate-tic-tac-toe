@@ -1,4 +1,4 @@
-import type { Board, Player} from '../interfaces';
+import type { Board, Player} from '../interfaces.js';
 
 export function calculateWinner(
   board: Board): { gameWinner: string | null; subBoardWinners: (string | null)[] }  {

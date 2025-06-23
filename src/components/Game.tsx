@@ -1,7 +1,7 @@
 import Board from './ui/Board';
 import HistoryList from './ui/HistoryList';
 import StatusBar from './ui/StatusBar';
-import type { GameProps } from '@shared/interfaces';
+import type { GameProps } from '../../shared/interfaces';
 import '../App.css';
 
 export default function Game(props: GameProps) {

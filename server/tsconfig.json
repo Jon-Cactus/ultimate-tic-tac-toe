@@ -1,12 +1,9 @@
 {
     "compilerOptions": {
         "baseUrl": ".",
-        "paths": {
-            "@shared/*": ["../shared/*"]
-        },
         "target": "ES2022",
-        "module": "commonjs",
-        "moduleResolution": "node",
+        "module": "nodenext",
+        "moduleResolution": "nodenext",
         "rootDir": "../",
         "outDir": "./dist",
         "esModuleInterop": true,
@@ -14,5 +11,5 @@
         "strict": true,
         "skipLibCheck": true,
     },
-    "include": ["src", "../shared"]
+    "include": ["src"]
 }

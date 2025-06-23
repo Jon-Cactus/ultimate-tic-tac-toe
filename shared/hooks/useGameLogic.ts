@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { calculateWinner, getMoveCoordinates } from '../gameLogic/helpers';
-import { initGame, validateMove, applyMove } from '../gameLogic/';
-import type { GameState, Player } from '../interfaces';
+import { calculateWinner, getMoveCoordinates } from '../gameLogic/helpers.js';
+import { initGame, validateMove, applyMove } from '../gameLogic/index.js';
+import type { GameState, Player } from '../interfaces.js';
 
 export function useGameLogic() {
     const [gameState, setGameState] = useState<GameState>(initGame());

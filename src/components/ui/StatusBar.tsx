@@ -1,4 +1,4 @@
-import type { StatusBarProps } from '@shared/interfaces';
+import type { StatusBarProps } from '../../../shared/interfaces';
 import { useMode, usePlayer } from '../../context/Context';
 
 export default function StatusBar({ gameWinner, xIsNext, isHost, guestJoined, roomId }: StatusBarProps) {

@@ -29,7 +29,7 @@ export default function OnlineLobby() {
             else {
                 setAction('join');
                 setPlayer(res.player);
-                setGuestJoined(true); // POTENTIAL PROBLEM HERE
+                setGuestJoined(true);
             }
         });
     };
@@ -52,8 +52,8 @@ export default function OnlineLobby() {
                 <button className="btn-base" onClick={handleHost}>
                     Host Game
                 </button>
-                <div>
-                    <input 
+                <div className="block">
+                    <input
                         placeholder="Room ID to join"
                         value={roomId}
                         onChange={(e) => setRoomId(e.target.value)}

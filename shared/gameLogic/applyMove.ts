@@ -1,5 +1,5 @@
-import { calculateWinner } from './helpers';
-import type { GameState, Board, Player } from '../interfaces';
+import { calculateWinner } from './helpers.js';
+import type { GameState, Board, Player } from '../interfaces.js';
 
 export function applyMove(
     state: GameState,

@@ -1,5 +1,5 @@
-import type { GameState } from '../interfaces';
-import { calculateWinner } from './helpers';
+import type { GameState } from '../interfaces.js';
+import { calculateWinner } from './helpers.js';
 
 // Validate moves
 export function validateMove(

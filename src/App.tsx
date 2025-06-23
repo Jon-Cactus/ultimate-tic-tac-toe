@@ -21,7 +21,7 @@ export default function App() {
     return (
       <>
         <Header />
-        <div className="game-selector">
+        <div className="lobby">
           <button className="btn-base" onClick={() => setMode('local')}>Play Locally</button>
           <button className="btn-base" onClick={() => setMode('online')}>Play Online</button>
         </div>

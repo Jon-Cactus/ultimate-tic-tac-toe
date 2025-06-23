@@ -2,10 +2,13 @@ import express from 'express';
 import http from 'http';
 import { Server } from 'socket.io';
 import cors from 'cors';
-import { initGame } from '@shared/gameLogic/initGame';
-import { validateMove } from '@shared/gameLogic/validateMove';
-import { applyMove } from '@shared/gameLogic/applyMove';
-import type { GameState, MakeMove } from '@shared/interfaces';
+import { initGame } from '../../shared/gameLogic/initGame.js';
+import { validateMove } from '../../shared/gameLogic/validateMove.js';
+import { applyMove } from '../../shared/gameLogic/applyMove.js';
+import type { GameState, MakeMove } from '../../shared/interfaces.js';
+
+// TODO: When restarting a game online, game state becomes desynced. Restart only resets state for one player.
+
 
 // Environment setup
 const PORT = process.env.PORT || 3001;
@@ -58,12 +61,14 @@ io.on('connection', (socket) => {
         rooms[move.roomId] = nextState;
         io.in(move.roomId).emit('moveMade', nextState);
     });
+    // TODO: Reset game
+    //socket.on('resetGame', )
+
+    // TODO: add an option to "play again?" when a player wins?
 
     socket.on('disconnect', () => {
         console.log('[server] client disconnected', socket.id);
     });
-
-
 });
 
 server.listen(PORT, () => {

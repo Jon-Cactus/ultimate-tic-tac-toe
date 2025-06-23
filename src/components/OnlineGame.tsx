@@ -1,8 +1,8 @@
 import { useEffect, useRef, useContext } from 'react';
 import Game from './Game';
-import { useGameLogic } from '@shared/hooks/useGameLogic';
-import { PlayerContext } from '../context/Context.ts';
-import type { OnlineGameProps } from '@shared/interfaces';
+import { useGameLogic } from '../../shared/hooks/useGameLogic';
+import { PlayerContext } from '../context/Context';
+import type { OnlineGameProps } from '../../shared/interfaces';
 import type { Socket } from 'socket.io-client';
 
 

@@ -1,4 +1,4 @@
-import type { GameState } from '../interfaces';
+import type { GameState } from '../interfaces.js';
 
 const emptySubBoard = Array(9).fill(null);
 const emptyBoard = Array(9).fill(null).map(() => [...emptySubBoard]);

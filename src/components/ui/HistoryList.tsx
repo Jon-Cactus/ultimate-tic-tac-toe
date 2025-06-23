@@ -1,5 +1,5 @@
-import type {HistoryListProps} from '@shared/interfaces';
-import { getMoveCoordinates } from '@shared/gameLogic/helpers';
+import type {HistoryListProps} from '../../../shared/interfaces';
+import { getMoveCoordinates } from '../../../shared/gameLogic/helpers';
 
 export default function HistoryList({ history, startingPlayer, currentMove, gameWinner }: HistoryListProps) {
     // Create move list

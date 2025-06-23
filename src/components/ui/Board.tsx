@@ -1,5 +1,5 @@
 import SubBoard from './SubBoard';
-import type { BoardProps } from '@shared/interfaces';
+import type { BoardProps } from '../../../shared/interfaces';
 
 export default function Board({ boards, activeSubBoard, onSquareClick, subBoardWinners}: BoardProps) {
     return (
