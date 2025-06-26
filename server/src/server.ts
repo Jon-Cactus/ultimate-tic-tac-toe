@@ -78,7 +78,7 @@ io.on('connection', (socket) => {
             resetRequests[roomId].clear();
             io.in(roomId).emit('startGame', newState);
         }
-    })
+    });
 
     // TODO: add an option to "play again?" when a player wins?
 

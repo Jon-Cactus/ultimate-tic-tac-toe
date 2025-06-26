@@ -63,7 +63,7 @@ This component also sends API calls to the server via `socket.emit` (`createGame
 This component is in charge of:
 1. Syncing state between clients.
 
-    - useEffect listens for events from the server, specifically when the game starts (`startGame`) and when each move is made (`moveMade`). It receives the data from the server and passes it into a function `syncState` in order to sync the state between each client.
+    - useEffect listens for events from the server, specifically when the game starts (`startGame`), when each move is made (`moveMade`), and when a request to reset has been made (`resetRequested`). It receives the data from the server and passes it into a function `syncState` in order to sync the state between each client.
 
 2. Utilizing the shared game logic to validate and process moves.
 
@@ -103,7 +103,13 @@ Receives props for UI updates:
 
 - subBoardWinners (used to display won sub boards)
 
-- onRestartGame UNDER CONSTRUCTION
+- resetBoard (for local use)
+
+- requestReset (for requesting the other player to reset during online play)
+
+- resetRequested (state used to change button text)
+
+- iSentRequest (state used to indicate the player who requested, also changes button text)
 
 - onSquareClick (this passes all the way down to the `Square` component, and handles clicks on squares)
 
@@ -331,7 +337,7 @@ This file implements **Node.js**, **Express**, and **Socket.IO** to create a rea
     });
     ```
 
-    - Receives a move from a player
+    - Receives a move from a player.
 
     - Validates the move using `validateMove()` from `gameLogic`.
 
@@ -339,7 +345,31 @@ This file implements **Node.js**, **Express**, and **Socket.IO** to create a rea
 
     - broadcasts the new move to both players via `io.in(move.roomId).emit('moveMade', nextState)`.
 
-    5. `disconnect`:
+    5. `resetRequested`:
+
+    ```ts
+    socket.on('resetRequested', ({ roomId }: { roomId: string }) => {
+        if (!resetRequests[roomId]) resetRequests[roomId] = new Set();
+        resetRequests[roomId].add(socket.id);
+        socket.to(roomId).emit('resetRequested');
+    
+        const participants = io.sockets.adapter.rooms.get(roomId) || new Set();
+        if (resetRequests[roomId].size >= participants.size) {
+            const newState = initGame();
+            rooms[roomId] = newState;
+            resetRequests[roomId].clear();
+            io.in(roomId).emit('startGame', newState);
+        }
+    });
+    ```
+    
+    - Receives a reset request from a player.
+
+    - Notifies the other player that a reset has been requested.
+
+    - Creates a fresh game state and sends it to the client with the `startGame` event.
+
+    6. `disconnect`:
 
     ```ts
     socket.on('disconnect', () => {
@@ -382,8 +412,6 @@ I set out at the beginning of this project to achieve several goals:
 - **Server-Authoritative**: Prevents cheating by validating moves centrally.
 
 - **React Hooks**: `useGameLogic` encapsulates state and exposes clear API.
-
-- **Manual Room Sharing**: Host copies room ID to share.
 
 
 ## Stack
