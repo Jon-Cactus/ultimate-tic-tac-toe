@@ -15,7 +15,11 @@ export interface GameProps {
     xIsNext: boolean;
     gameWinner: string | null;
     subBoardWinners: (string | null)[];
-    onFirstMoveSelection: () => void;
+    // Game reset
+    resetBoard: () => void;
+    requestReset: () => void;
+    resetRequested: boolean;
+    iSentRequest: boolean;
     onSquareClick: (subBoardIdx: number, squareIdx: number) => void;
     isHost: boolean;
     guestJoined: boolean;

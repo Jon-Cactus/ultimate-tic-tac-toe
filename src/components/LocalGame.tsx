@@ -1,5 +1,6 @@
 import Game  from './Game';
 import { useGameLogic } from '../../shared/hooks/useGameLogic';
+import { initGame } from '../../shared/gameLogic/initGame';
 
 export default function LocalGame() {
     const logic = useGameLogic();
@@ -15,7 +16,7 @@ export default function LocalGame() {
             xIsNext={logic.xIsNext}
             gameWinner={logic.gameWinner}
             subBoardWinners={logic.subBoardWinners}
-            onFirstMoveSelection={logic.handleFirstMoveSelection}
+            resetBoard={() => logic.handleFirstMoveSelection()}
             onSquareClick={(sb, sq) => logic.handleMove(sb, sq, player!)}
         />
     )

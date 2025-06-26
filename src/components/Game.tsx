@@ -15,12 +15,43 @@ export default function Game(props: GameProps) {
     currentBoard,
     gameWinner,
     subBoardWinners, 
-    onFirstMoveSelection,
+    resetBoard,
+    requestReset,
+    resetRequested,
+    iSentRequest,
     onSquareClick,
     isHost,
     guestJoined,
     roomId
    } = props
+
+   let resetBtn;
+   if (roomId) {
+    // Prepare text when the other player requests a reset
+    const requestTxt = (resetRequested && !iSentRequest) ? 'Opponent has requested a reset!' : '';
+    // Change button text depending upon context
+    const requestBtnTxt = (resetRequested && !iSentRequest) // Oponent requests reset
+    ? 'Reset Game' 
+    : (resetRequested && iSentRequest) // User requests reset
+    ? 'Reset Requested'
+    : 'Request Reset'; // Default
+    resetBtn = (
+      <div className="reset-control">
+        <button className="btn-base" onClick={requestReset}>
+          {requestBtnTxt}
+        </button>
+        <div>{requestTxt}</div>
+      </div>
+    )
+   } else if (!roomId) {
+    resetBtn = (
+      <div className="reset-control">
+        <button className="btn-base" onClick={() => resetBoard()}>
+          Restart Game
+        </button>
+      </div>
+    )
+   }
 
   return (
     <div className="container">
@@ -39,11 +70,7 @@ export default function Game(props: GameProps) {
             onSquareClick={onSquareClick}
             subBoardWinners={subBoardWinners}
           />
-          <div className="game-control">
-            <button className="btn-base" onClick={onFirstMoveSelection}>
-              Restart Game
-            </button>
-          </div>
+          {resetBtn}
         </div>
         <HistoryList 
           history={history}

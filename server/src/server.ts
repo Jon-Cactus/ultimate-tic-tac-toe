@@ -7,9 +7,6 @@ import { validateMove } from '../../shared/gameLogic/validateMove.js';
 import { applyMove } from '../../shared/gameLogic/applyMove.js';
 import type { GameState, MakeMove } from '../../shared/interfaces.js';
 
-// TODO: When restarting a game online, game state becomes desynced. 
-// Restart only resets state for one player.
-
 
 // Environment setup
 const PORT = process.env.PORT || 3001;
@@ -25,6 +22,8 @@ const io = new Server(server, {
 
 // Object for room state
 const rooms: Record<string, GameState> = {};
+// Object to track which sockets have requested resets
+const resetRequests: Record<string, Set<string>> = {};
 
 // Socket logic
 io.on('connection', (socket) => {
@@ -62,8 +61,24 @@ io.on('connection', (socket) => {
         rooms[move.roomId] = nextState;
         io.in(move.roomId).emit('moveMade', nextState);
     });
-    // TODO: Reset game
-    //socket.on('resetGame', )
+
+    socket.on('resetRequested', ({ roomId }: { roomId: string }) => {
+        // Ensure that a set exists
+        if (!resetRequests[roomId]) resetRequests[roomId] = new Set();
+        // Record that this socket wants a reset
+        resetRequests[roomId].add(socket.id);
+        // Notify other player that a reset has been requested
+        socket.to(roomId).emit('resetRequested');
+
+        const participants = io.sockets.adapter.rooms.get(roomId) || new Set();
+        if (resetRequests[roomId].size >= participants.size) {
+            const newState = initGame();
+            rooms[roomId] = newState;
+            // Clear any pending requests
+            resetRequests[roomId].clear();
+            io.in(roomId).emit('startGame', newState);
+        }
+    })
 
     // TODO: add an option to "play again?" when a player wins?
 
