@@ -355,8 +355,8 @@ This file implements **Node.js**, **Express**, and **Socket.IO** to create a rea
 Validates and applies moves, and synchronizes game state between clients.
 
 
+## Project Goals
 
-*Did I debate any design choices?*
 UNFINISHED
 
 I set out at the beginning of this project to achieve several goals:
