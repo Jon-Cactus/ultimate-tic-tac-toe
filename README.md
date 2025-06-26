@@ -18,7 +18,27 @@ It features:
 
 # File Breakdown
 
+## Architecture & File Structure
+
+```text
+ultimate-tic-tac-toe/
+├── client/                # React + Vite frontend
+│   ├── src/
+│   │   ├── components/    # Container components (Game, LocalGame, etc.)
+│   │   │   └── ui/        # UI components (Square, SubBoard, etc.)
+│   │   ├── context/       # React context providers (ModeContext etc.)
+│   │   └── App.tsx
+│   └── index.html
+├── shared/                # Shared logic and types
+│   ├── gameLogic/         # initGame, validateMove, applyMove, helpers
+│   ├── hooks/             # Custom React hooks (useGameLogic)
+│   └── interfaces.ts      # TypeScript interfaces
+└── server/                # Express + Socket.IO backend
+    └── src/
+        └── server.ts      # Socket event handlers and room state
+```
 This project's file structure is divided between three folders: one for the client, server, and a layer for functional game engine logic shared between both the client and server sides.
+
 
 ## Client (`src`)
 
@@ -254,13 +274,11 @@ This file implements **Node.js**, **Express**, and **Socket.IO** to create a rea
 
     ```ts
     socket.on('createGame', callback => {
-        const roomId = Math.random().toString(36).substring(2, 8) // Generate random string of nums and chars
-        const state = initGame(); // Create game state object
+        const roomId = Math.random().toString(36).substring(2, 8)
+        const state = initGame();
         rooms[roomId] = state;
-        // Set host as either X or O
         socket.join(roomId);
         callback({ roomId, player: state.startingPlayer });
-        // Send initial game state to host client
         socket.emit('startGame', state);
     });
     ```
@@ -306,7 +324,6 @@ This file implements **Node.js**, **Express**, and **Socket.IO** to create a rea
     socket.on('makeMove', (move: MakeMove) =>{
         const state = rooms[move.roomId];
         if (!state) return;
-    
         if (!validateMove(state, move.subBoardIdx, move.squareIdx, move.player)) return;
         const nextState = applyMove(state, move.subBoardIdx, move.squareIdx, move.player);
         rooms[move.roomId] = nextState;
@@ -357,6 +374,16 @@ I set out at the beginning of this project to achieve several goals:
 3. Gain an understanding of Node.js:
 
     - 
+## Design Decisions
+
+- **Pure Shared Logic**: 
+    - Single source of truth for game rules. I initially ran into issues with desyncing logic between clients due to split logic between the client and server.
+
+- **Server-Authoritative**: Prevents cheating by validating moves centrally.
+
+- **React Hooks**: `useGameLogic` encapsulates state and exposes clear API.
+
+- **Manual Room Sharing**: Host copies room ID to share.
 
 
 ## Stack
