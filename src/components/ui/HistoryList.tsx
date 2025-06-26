@@ -11,14 +11,15 @@ export default function HistoryList({ history, startingPlayer, currentMove, game
         </li>
       )
     }
+    // Go through history and produce a list item for each move
     moves = history.slice(1).map((board, move) => {
       const moveNumber = move + 1;
-      const player = 
+      // Determine the correct player for the move
+      const player =
       startingPlayer === 'X'
       ? moveNumber % 2 === 1 ? 'X' : 'O'
       : moveNumber % 2 === 1 ? 'O' : 'X';
       const prevBoard = history[moveNumber - 1];
-      // TODO: Needs altering to account for the 3d arrays
       const moveCoordinates = getMoveCoordinates(prevBoard, board);
         // Determine the correct description based on current move and move #
       const description = moveCoordinates
@@ -26,7 +27,7 @@ export default function HistoryList({ history, startingPlayer, currentMove, game
         : gameWinner
         ? 'No more legal moves'
         : 'No moves yet!';
-      // Determine whether the li should be rendered as a paragraph or button based on currentMove
+        
       return (
         <li key={moveNumber}>
             <p>{description}</p>

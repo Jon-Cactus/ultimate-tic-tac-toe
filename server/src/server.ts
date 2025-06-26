@@ -7,7 +7,8 @@ import { validateMove } from '../../shared/gameLogic/validateMove.js';
 import { applyMove } from '../../shared/gameLogic/applyMove.js';
 import type { GameState, MakeMove } from '../../shared/interfaces.js';
 
-// TODO: When restarting a game online, game state becomes desynced. Restart only resets state for one player.
+// TODO: When restarting a game online, game state becomes desynced. 
+// Restart only resets state for one player.
 
 
 // Environment setup

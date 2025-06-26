@@ -4,7 +4,10 @@ import { initGame, validateMove, applyMove } from '../gameLogic/index.js';
 import type { GameState, Player } from '../interfaces.js';
 
 export function useGameLogic() {
-    const [gameState, setGameState] = useState<GameState>(initGame());
+    // Learned through ChatGPT that a function can be passed into useState. This is convenient in
+    // this case due to the fact that `initGame` returns values that change throughout the game, meaning
+    // they can be easily updated or even reset.
+    const [gameState, setGameState] = useState<GameState>(initGame()); 
     const syncState = (next: GameState) => setGameState(next);
     
     // Restart or begin game
@@ -32,7 +35,6 @@ export function useGameLogic() {
         activeSubBoard: gameState.activeSubBoard,
         startingPlayer: gameState.startingPlayer,
         xIsNext,
-        //
         currentBoard,
         gameWinner,
         subBoardWinners,

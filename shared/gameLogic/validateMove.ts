@@ -19,7 +19,6 @@ export function validateMove(
         currentBoard[subBoardIdx][squareIdx] || // Blocks moves on filled squares
         subBoardWinners[subBoardIdx] || // Blocks moves on subboards that have been won
         gameWinner) return false; // Block moves when the game has been won
-    //if (subBoardWinners[subBoardIdx]) return; // Block moves on won subboards
     if (activeSubBoard !== null && subBoardIdx !== activeSubBoard) return false; // Block moves on non-active subboards
     return true;
 }
