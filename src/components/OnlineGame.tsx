@@ -18,13 +18,13 @@ export default function OnlineGame({ roomId, socket, isHost, guestJoined }: Onli
 
     useEffect(() => {
         s.on('startGame', (data) => {
+            console.log('↪ startGame on', player, data.startingPlayer);
             logic.syncState(data)
             setResetRequested(false);
             setISentRequest(false);
         });
         s.on('moveMade', (data) => logic.syncState(data));
         s.on('resetRequested', () => setResetRequested(true));
-        socket.connect();        
         return () => {
             s.off('startGame');
             s.off('moveMade');

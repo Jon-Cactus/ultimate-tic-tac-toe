@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import express from 'express';
 import http from 'http';
 import { Server } from 'socket.io'; // https://socket.io/docs/v4/server-api/#socket
@@ -48,7 +49,7 @@ io.on('connection', (socket) => {
         const open = taken === 'X' ? 'O' : 'X';
         socket.join(roomId);
         callback({ player: open });
-        socket.emit('startGame', state);
+        io.in(roomId).emit('startGame', state);
         socket.to(roomId).emit('guestJoined');
     });
     // Handle moves
