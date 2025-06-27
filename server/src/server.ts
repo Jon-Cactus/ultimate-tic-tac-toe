@@ -52,6 +52,11 @@ io.on('connection', (socket) => {
         io.in(roomId).emit('startGame', state);
         socket.to(roomId).emit('guestJoined');
     });
+
+    socket.on('getState', ({ roomId }: { roomId: string }, callback: (state: GameState) => void) => {
+        const state = rooms[roomId];
+        if (state) callback(state);
+    })
     // Handle moves
     socket.on('makeMove', (move: MakeMove) =>{
         const state = rooms[move.roomId];
