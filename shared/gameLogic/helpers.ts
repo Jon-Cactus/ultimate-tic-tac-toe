@@ -7,6 +7,7 @@ export function calculateWinner(
     [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
     [0, 4, 8], [2, 4, 6]             // Diagonals
   ];
+  // Check for sub board wins
   const subBoardWinners = board.map(subBoard => {
     for (let i: number = 0; i < lines.length; i++) {
       const [a, b, c] = lines[i];
@@ -17,7 +18,7 @@ export function calculateWinner(
     if (!subBoard.includes(null)) return 'draw';
     return null;
   });
-
+  // Check for overall board win
   let gameWinner: Player | string | null = null;
   for (let i: number = 0; i < lines.length; i++) {
     const [a, b, c] = lines[i];
@@ -26,7 +27,7 @@ export function calculateWinner(
        break;
     }
   }
-
+  // Check for draw
   if (gameWinner === null && subBoardWinners.every(winner => winner === 'draw')) {
     gameWinner = 'draw';
   }

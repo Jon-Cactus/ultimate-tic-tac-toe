@@ -1,9 +1,8 @@
 import Game  from './Game';
 import { useGameLogic } from '../../shared/hooks/useGameLogic';
-import { initGame } from '../../shared/gameLogic/initGame';
 
 export default function LocalGame() {
-    const logic = useGameLogic();
+    const logic = useGameLogic(); 
     const player = logic.xIsNext ? 'X' : 'O';
 
     return (

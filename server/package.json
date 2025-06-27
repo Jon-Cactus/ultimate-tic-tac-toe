@@ -20,7 +20,7 @@
     "typescript"
   ],
   "author": "Jonathan Spence",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/Jon-Cactus/ultimate-tic-tac-toe/issues"
   },

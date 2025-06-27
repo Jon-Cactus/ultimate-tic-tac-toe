@@ -1,7 +1,7 @@
 # Ultimate Tic-Tac-Toe
 
 
-**What is Ultimate Tic-Tac-Toe?**
+
 
 
 This project is a React+TypeScript+Vite build of Ultimate Tic-Tac-Toe, implementing a shared, functional game logic layer and support for both local and real-time multiplayer modes via WebSockets (socket-io).
@@ -16,9 +16,32 @@ It features:
 
 - Built using React, TypeScript, and Express
 
+**What is Ultimate Tic-Tac-Toe?**
+
+Ultimate Tic-Tac-Toe expands upon vanilla Tic-Tac-Toe by allowing play on 9 separate boards, each mapping to the square of a larger meta-board. When an individual board is won, it is claimed by the player, becoming either 'X' or 'O'. When 3 boards are won in a row, the overall game is won.
+
+Allowing play on 9 different boards introduces a layer of complexity that often has players thinking 3 or more moves ahead.
+
+**Rules**:
+
+ - Players take turns placing their respective symbols ('X' or 'O') in squares
+ across the board.
+
+ - Moves can only be made in an "active" sub board
+
+    - Sub boards are set as "active" based on the square index of the last move.
+    If the square has an index of "3" (top-right square) within a sub board, the
+    sub board with an index of "3" (top-right sub board) will be set as "active".
+
+    - If a move is made in a square whose index corresponds to an already-taken
+    sub board, every sub board will be set as "active".
+
+- The win condition is winning three sub boards in a row (rows, columns, or diagonals).
+
+
 # File Breakdown
 
-## Architecture & File Structure
+### Architecture & File Structure
 
 ```text
 ultimate-tic-tac-toe/
@@ -169,7 +192,7 @@ This file's job is to generate an unordered list of every move made during a gam
 
 Receives the following props from `Game.tsx`:
 
-- `history`: a 3D array of every move made in the game (an array where each element is the board state for a given move).
+- `history`: a 2D array of every move made in the game (an array where each element is the board state for a given move).
 
 - `startingPlayer`: Used to determine which player makes a given move.
 
@@ -205,7 +228,7 @@ gameLogic contains several files crucial in handling changing game state.
 
 **initGame.ts**
 
-`initGame.ts` initializes an empty 3D array to track move history and then returns it along with the necessary information to initialize a game using `setGameState()` from `useGameLogic.ts` (elaborated on later).
+`initGame.ts` initializes an empty 2D array (Array of 3x3 arrays) to track move history and then returns it along with the necessary information to initialize a game using `setGameState()` from `useGameLogic.ts` (elaborated on later).
 
 **validateMove.ts**
 

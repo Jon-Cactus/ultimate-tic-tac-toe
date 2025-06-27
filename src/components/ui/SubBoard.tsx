@@ -2,7 +2,7 @@ import type { SubBoardProps } from '../../../shared/interfaces';
 import Square from './Square';
 
 export default function SubBoard({ squares, onSquareClick, isActive, isWon }: SubBoardProps) {
-  const playerColor =
+  const playerColor = // Determine correct class to add
     isWon === 'X'
     ? 'player-1 won'
     : isWon === 'O'
@@ -11,10 +11,10 @@ export default function SubBoard({ squares, onSquareClick, isActive, isWon }: Su
   return (
   <>
     <div className={`sub-board ${playerColor}`}>{isWon !== 'draw' ? isWon : ''}
-      {Array.from({length: 3}, (_, row) => (
+      {Array.from({length: 3}, (_, row) => ( // Create a 3x3 array of squares
         <div className={`sub-board-row ${isWon ? 'hidden' : ''}`} key={row}>
           {Array.from({length: 3}, (_, col) => {
-            const squareIdx = row * 3 + col;
+            const squareIdx = row * 3 + col; // Index squares 1-9
             return (
               <Square
                 key={squareIdx}

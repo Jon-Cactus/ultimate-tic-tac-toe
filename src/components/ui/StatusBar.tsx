@@ -5,7 +5,7 @@ export default function StatusBar({ gameWinner, xIsNext, isHost, guestJoined, ro
     const mode = useMode();
     const player = usePlayer();
     const waitingForGuest = isHost && !guestJoined;
-
+    // Check for winner, in which case the text changes
     const text = gameWinner 
     ? `Winner: ${gameWinner}`
     : `Next player: ${xIsNext ? 'X' : 'O'}`
@@ -16,7 +16,7 @@ export default function StatusBar({ gameWinner, xIsNext, isHost, guestJoined, ro
         </div>
     )
 
-    return (
+    return ( // For online games
         <div className="status">
             {waitingForGuest && (
                 <span className="status-text">

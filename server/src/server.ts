@@ -1,6 +1,6 @@
 import express from 'express';
 import http from 'http';
-import { Server } from 'socket.io';
+import { Server } from 'socket.io'; // https://socket.io/docs/v4/server-api/#socket
 import cors from 'cors';
 import { initGame } from '../../shared/gameLogic/initGame.js';
 import { validateMove } from '../../shared/gameLogic/validateMove.js';
@@ -63,6 +63,9 @@ io.on('connection', (socket) => {
     });
 
     socket.on('resetRequested', ({ roomId }: { roomId: string }) => {
+        /* ChatGPT saved me here once again. I was having trouble due to the fact that
+        a reset could be triggered by the same player clicking "reset" twice, instead 
+        of a handshake-like system. A set ensures that each value in the pair is unique. */
         // Ensure that a set exists
         if (!resetRequests[roomId]) resetRequests[roomId] = new Set();
         // Record that this socket wants a reset

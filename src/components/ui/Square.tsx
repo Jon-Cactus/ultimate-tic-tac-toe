@@ -1,7 +1,7 @@
 import type { SquareProps } from '../../../shared/interfaces';
 
 export default function Square({ value, onSquareClick, active }: SquareProps) {
-  const playerColor =
+  const playerColor = // Determine correct class to add
     value === 'X'
     ? 'player-1'
     : value === 'O'

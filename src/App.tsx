@@ -17,7 +17,7 @@ export default function App() {
   // Control local/online play
   const [mode, setMode] = useState<Mode>(null);
 
-  if (mode === null) {
+  if (mode === null) { // Before selecting mode
     return (
       <>
         <Header />
@@ -28,7 +28,7 @@ export default function App() {
       </>
     )
   }
-  return (
+  return ( // After selecting mode
     <ModeContext.Provider value={mode}>
       <div className="page">
         <Header />

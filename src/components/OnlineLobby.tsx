@@ -6,6 +6,7 @@ import { PlayerContext } from '../context/Context';
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
 
 export default function OnlineLobby() {
+    // Connect once on initial mount and preserve across re-renders
     const [socket] = useState<Socket>(() => io(BACKEND_URL, { autoConnect: false }));
     const [action, setAction] = useState<'host' | 'join' | null>(null);
     const [roomId, setRoomId] = useState<string>('');
@@ -21,7 +22,7 @@ export default function OnlineLobby() {
             setAction('host');
         });
     };
-    
+    // Guest flow
     const handleJoin = () => {
         socket.connect();
         socket.emit('joinGame', { roomId }, (res: { error?: string; player: 'X' | 'O' }) => {
@@ -33,7 +34,7 @@ export default function OnlineLobby() {
             }
         });
     };
-
+    // As host, listen for guest joining
     useEffect(() => {
         if (action === 'host') {
             socket.on('guestJoined', () => {
@@ -46,7 +47,7 @@ export default function OnlineLobby() {
     }, [action, socket])
     
 
-    if (!action) {
+    if (!action) { // Have not selected "host" or "join"
         return (
             <div className="lobby">
                 <button className="btn-base" onClick={handleHost}>

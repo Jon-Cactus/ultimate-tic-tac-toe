@@ -3,7 +3,7 @@ import Game from './Game';
 import { useGameLogic } from '../../shared/hooks/useGameLogic';
 import { PlayerContext } from '../context/Context';
 import type { OnlineGameProps } from '../../shared/interfaces';
-import type { Socket } from 'socket.io-client';
+import type { Socket } from 'socket.io-client'; // https://socket.io/docs/v4/client-api/#socket
 
 
 
@@ -30,8 +30,8 @@ export default function OnlineGame({ roomId, socket, isHost, guestJoined }: Onli
             s.off('moveMade');
             s.off('resetRequested');
         };
-    }, []);
-
+    }, []); // Mount only once
+    // Handle move flow
     const handleOnlineClick = (subBoardIdx: number, squareIdx: number) => {
         if (!logic.isValidMove(subBoardIdx, squareIdx, player)) return; // Validate before sending to server
         s.emit('makeMove', {
@@ -41,7 +41,7 @@ export default function OnlineGame({ roomId, socket, isHost, guestJoined }: Onli
             player
         });
     };
-
+    // Reset flow
     const requestReset = () => {
         s.emit('resetRequested', { roomId });
         setResetRequested(true);
@@ -62,6 +62,7 @@ export default function OnlineGame({ roomId, socket, isHost, guestJoined }: Onli
             requestReset={requestReset}
             resetRequested={resetRequested}
             iSentRequest={iSentRequest}
+            
             onSquareClick={handleOnlineClick}
             isHost={isHost}
             guestJoined={guestJoined}
