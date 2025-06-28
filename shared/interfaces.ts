@@ -15,15 +15,16 @@ export interface GameProps {
     xIsNext: boolean;
     gameWinner: string | null;
     subBoardWinners: (string | null)[];
-    // Game reset
-    resetBoard: () => void;
-    requestReset: () => void;
-    resetRequested: boolean;
-    iSentRequest: boolean;
-    onSquareClick: (subBoardIdx: number, squareIdx: number) => void;
-    isHost: boolean;
-    guestJoined: boolean;
-    roomId: string | undefined;
+    // Optional: game reset/online play
+    resetBoard?: () => void;
+    requestReset?: () => void;
+    resetRequested?: boolean;
+    iSentRequest?: boolean;
+    onSquareClick?: (subBoardIdx: number, squareIdx: number) => void;
+    // Optional: multiplayer mode
+    isHost?: boolean;
+    guestJoined?: boolean;
+    roomId?: string | undefined;
 }
 
 export interface BoardProps {
