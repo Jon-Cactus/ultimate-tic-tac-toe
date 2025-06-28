@@ -1,0 +1,44 @@
+{
+  "name": "ultimate-tic-tac-toe-server",
+  "version": "1.0.0",
+  "engines": {
+    "node": ">=20",
+    "npm": ">=10"
+  },
+  "description": "Backend server for online Ultimate Tic-Tac-Toe",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "test": "npm test",
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/index.js",
+    "dev": "nodemon --watch src --exec \"node --loader ts-node/esm -r tsconfig-paths/register src/server.ts\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jon-Cactus/ultimate-tic-tac-toe.git"
+  },
+  "keywords": [
+    "ultimate-tic-tac-toe",
+    "socket.io",
+    "typescript"
+  ],
+  "author": "Jonathan Spence",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Jon-Cactus/ultimate-tic-tac-toe/issues"
+  },
+  "homepage": "https://github.com/Jon-Cactus/ultimate-tic-tac-toe#readme",
+  "dependencies": {
+    "dotenv": "^16.6.0",
+    "express": "5.1.0",
+    "socket.io": "4.8.1",
+    "tsconfig-paths": "4.2.0"
+  },
+  "devDependencies": {
+    "@types/express": "5.0.3",
+    "nodemon": "3.1.10",
+    "ts-node": "10.9.2",
+    "typescript": "5.8.3"
+  }
+}
