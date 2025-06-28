@@ -15,14 +15,15 @@ export interface GameProps {
     xIsNext: boolean;
     gameWinner: string | null;
     subBoardWinners: (string | null)[];
+    onSquareClick: (subBoardIdx: number, squareIdx: number) => void;
+
     // Optional: game reset/online play
     resetBoard?: () => void;
     requestReset?: () => void;
     resetRequested?: boolean;
     iSentRequest?: boolean;
-    onSquareClick?: (subBoardIdx: number, squareIdx: number) => void;
     // Optional: multiplayer mode
-    isHost?: boolean;
+    isHost?: boolean | undefined;
     guestJoined?: boolean;
     roomId?: string | undefined;
 }
@@ -30,7 +31,7 @@ export interface GameProps {
 export interface BoardProps {
     boards: Board;
     activeSubBoard: number | null;
-    onSquareClick: (idx: number, squareIdx: number) => void;
+    onSquareClick: ((subBoardIdx: number, squareIdx: number) => void);
     subBoardWinners: (string | null)[];
 }
 
@@ -59,8 +60,8 @@ export interface StatusBarProps {
     xIsNext: boolean;
     shareRoomId?: string;
     waitingForGuest?: boolean;
-    isHost: boolean;
-    guestJoined: boolean;
+    isHost: boolean | undefined;
+    guestJoined: boolean | undefined;
     roomId: string | undefined;
 }
 

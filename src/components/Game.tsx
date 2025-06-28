@@ -46,7 +46,7 @@ export default function Game(props: GameProps) {
    } else if (!roomId) {
     resetBtn = (
       <div className="reset-control">
-        <button className="btn-base" onClick={() => resetBoard()}>
+        <button className="btn-base" onClick={() => resetBoard?.()}>
           Restart Game
         </button>
       </div>
