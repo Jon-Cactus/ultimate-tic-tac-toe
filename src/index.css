@@ -51,10 +51,14 @@ h1 {
   background-color: var(--light-background);
 }
 
+.header:hover {
+  cursor: pointer;
+}
+
 .container {
   padding: 10px 0 75px 0;
   margin: 0 auto;
-  height: 100vh;
+  height: 100%;
   width: 80%;
   max-width: 1250px;
   background-color: var(--background);
@@ -62,15 +66,33 @@ h1 {
 
 .status {
   display: block;
-  padding: 15px;
-  margin: 85px auto 0px auto;
-  width: 90%;
   max-width: 450px;
   color: var(--text);
   font-size: 22px;
   overflow-x: auto;
-  border: 2px ridge var(--tertiary);
   background-color: var(--dark-background);
+}
+
+.description {
+  max-width: 950px;
+  color: honeydew;
+  font-size: 20px;
+  background-color: var(--background);
+}
+
+.description * {
+  margin: 9px 0;
+}
+.container .description {
+  margin-top: 50px;
+}
+
+.status, .description {
+  padding: 15px;
+  width: 90%;
+  border: 2px ridge var(--tertiary);
+  margin: 85px auto 0px auto;
+
 }
 
 .status-text {

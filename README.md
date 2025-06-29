@@ -1,9 +1,6 @@
 # Ultimate Tic-Tac-Toe
 
 
-
-
-
 This project is a React+TypeScript+Vite build of Ultimate Tic-Tac-Toe, implementing a shared, functional game logic layer and support for both local and real-time multiplayer modes via WebSockets (socket-io).
 
 It features:
@@ -18,7 +15,7 @@ It features:
 
 **What is Ultimate Tic-Tac-Toe?**
 
-Ultimate Tic-Tac-Toe expands upon vanilla Tic-Tac-Toe by allowing play on 9 separate boards, each mapping to the square of a larger meta-board. When an individual board is won, it is claimed by the player, becoming either 'X' or 'O'. When 3 boards are won in a row, the overall game is won.
+Ultimate Tic-Tac-Toe expands upon vanilla Tic-Tac-Toe by allowing play on 9 separate boards, each mapping to the square of a larger meta-board. Players take turns placing X or O in the small boards, but the twist is: your move determines where your opponent plays next.
 
 Allowing play on 9 different boards introduces a layer of complexity that often has players thinking 3 or more moves ahead.
 
@@ -36,7 +33,9 @@ Allowing play on 9 different boards introduces a layer of complexity that often 
     - If a move is made in a square whose index corresponds to an already-taken
     sub board, every sub board will be set as "active".
 
-- The win condition is winning three sub boards in a row (rows, columns, or diagonals).
+- When an individual board is won, it is claimed by the player, becoming either 'X' or 'O'.
+
+- When 3 boards are won in a row (rows, columns, or diagonals), the overall game is won.
 
 
 # File Breakdown
@@ -140,7 +139,7 @@ Also passes information into the `StatusBar` and `HistoryList` components (to be
 
 ### ui (Components subfolder)
 
-`ui` contains `Board.tsx`, `SubBoard.tsx`, `Square.tsx`, `HistoryList.tsx`, and `StatusBar.tsx`, all of which receive their props from either `Game.tsx` or `OnlineGame.tsx`.
+`ui` contains `Board.tsx`, `SubBoard.tsx`, `Square.tsx`, `HistoryList.tsx`, and `StatusBar.tsx`, all of which receive their props from either `Game.tsx` or `OnlineGame.tsx` (save for `description`, which is a simple component to display game rules).
 
 Props passed to `Board.tsx`:
 
