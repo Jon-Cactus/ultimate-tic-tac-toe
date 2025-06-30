@@ -6,7 +6,7 @@
     "npm": ">=10"
   },
   "description": "Backend server for online Ultimate Tic-Tac-Toe",
-  "main": "dist/server.js",
+  "main": "dist/server/src/server.js",
   "type": "module",
   "scripts": {
     "test": "npm test",
