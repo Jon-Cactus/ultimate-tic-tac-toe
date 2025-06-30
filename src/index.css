@@ -91,7 +91,7 @@ h1 {
   padding: 15px;
   width: 90%;
   border: 2px ridge var(--tertiary);
-  margin: 85px auto 0px auto;
+  margin: 45px auto 0px auto;
 
 }
 
@@ -126,7 +126,7 @@ h1 {
   display: flex;
   flex-shrink: 0; 
   justify-content: center;
-  margin-top: 100px;
+  margin-top: 50px;
 }
 
 .game-info {
@@ -265,6 +265,7 @@ h1 {
 
   .container {
     transform: scale(0.85);
+    transform-origin: top center;
     background-color: var(--dark-background);
     margin-top: 0;
   }
@@ -277,9 +278,9 @@ h1 {
     width: 100%;
   }
   
-  .status {
+  .status, .description {
     width: 90%;
-    margin: 0 auto;
+    margin: 15px auto 0 auto;
     font-size: 18px;
   }
   
@@ -292,7 +293,7 @@ h1 {
   .game {
     flex-direction: column;
     align-items: center;
-    margin-top: 50px;
+    margin-top: 30px;
   }
 
   .game-info {
