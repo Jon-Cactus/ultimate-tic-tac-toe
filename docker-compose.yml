@@ -1,0 +1,13 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: server/dockerfile
+    image: uttt-backend:latest
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - CLIENT_ORIGIN=https://ultimatetictactoe-virid.vercel.app/
+    restart: unless-stopped

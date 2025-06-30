@@ -1,51 +1,65 @@
-import type { Board, Player} from '../interfaces.js';
+import type { Board, Player, SubBoard } from '../interfaces.js';
 
 export function calculateWinner(
-  board: Board): { gameWinner: string | null; subBoardWinners: (string | null)[] }  {
+  board: Board
+): { gameWinner: Player | 'draw' | null; subBoardWinners: (Player | 'draw' | null)[] } {
   const lines = [
     [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
     [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
     [0, 4, 8], [2, 4, 6]             // Diagonals
   ];
-  // Check for sub board wins
-  const subBoardWinners = board.map(subBoard => {
-    for (let i: number = 0; i < lines.length; i++) {
-      const [a, b, c] = lines[i];
-      if (subBoard[a] && subBoard[a] === subBoard[b] && subBoard[a] === subBoard[c]) {
-        return subBoard[a];
+
+  const subBoardWinners = board.map((subBoard: SubBoard) => {
+    for (const line of lines) {
+      const [a, b, c] = line;
+      // Ensure a, b, c are not undefined before using as indexes
+      if (a === undefined || b === undefined || c === undefined) continue;
+
+      const squareA = subBoard[a];
+      if (squareA && squareA === subBoard[b] && squareA === subBoard[c]) {
+        return squareA;
       }
     }
     if (!subBoard.includes(null)) return 'draw';
     return null;
   });
-  // Check for overall board win
-  let gameWinner: Player | string | null = null;
-  for (let i: number = 0; i < lines.length; i++) {
-    const [a, b, c] = lines[i];
-    if (subBoardWinners[a] && subBoardWinners[a] === subBoardWinners[b] && subBoardWinners[a] === subBoardWinners[c]) {
-       gameWinner = subBoardWinners[a];
-       break;
+
+  let gameWinner: Player | 'draw' | null = null;
+  for (const line of lines) {
+    const [a, b, c] = line;
+    // Ensure a, b, c are not undefined
+    if (a === undefined || b === undefined || c === undefined) continue;
+
+    const winnerA = subBoardWinners[a];
+    // Ensure the winner isn't just a draw before declaring a game winner
+    if (winnerA && winnerA !== 'draw' && winnerA === subBoardWinners[b] && winnerA === subBoardWinners[c]) {
+      gameWinner = winnerA;
+      break;
     }
   }
-  // Check for draw
-  if (gameWinner === null && subBoardWinners.every(winner => winner === 'draw')) {
+
+  if (gameWinner === null && subBoardWinners.every((winner) => winner !== null)) {
     gameWinner = 'draw';
   }
   return { gameWinner, subBoardWinners };
 }
 
 export function getMoveCoordinates(
-  prevBoard: (string | null)[][] | undefined,
-  currBoard: (string | null)[][]
-): (number[] | null) {
+  prevBoard: Board | undefined,
+  currBoard: Board
+): number[] | null {
   if (!prevBoard) {
     return null;
   }
-  for (let boardIdx: number = 0; boardIdx < 9; boardIdx++) {
-    if (prevBoard[boardIdx] && currBoard[boardIdx]) {
-      for (let squareIdx: number = 0; squareIdx < 9; squareIdx++) {
-        if (prevBoard[boardIdx][squareIdx] !== currBoard[boardIdx][squareIdx]) {
-          return [boardIdx + 1, squareIdx + 1]
+  for (let boardIdx = 0; boardIdx < 9; boardIdx++) {
+    const prevSubBoard = prevBoard[boardIdx];
+    const currSubBoard = currBoard[boardIdx];
+
+    // Ensure both sub-boards exist before comparing
+    if (prevSubBoard && currSubBoard) {
+      for (let squareIdx = 0; squareIdx < 9; squareIdx++) {
+        if (prevSubBoard[squareIdx] !== currSubBoard[squareIdx]) {
+          return [boardIdx + 1, squareIdx + 1];
         }
       }
     }

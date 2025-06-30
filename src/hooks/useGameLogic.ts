@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { calculateWinner, getMoveCoordinates } from '../gameLogic/helpers.js';
-import { initGame, validateMove, applyMove } from '../gameLogic/index.js';
-import type { GameState, Player } from '../interfaces.js';
+import { calculateWinner, getMoveCoordinates } from '../../shared/gameLogic/helpers.js';
+import { initGame, validateMove, applyMove } from '../../shared/gameLogic/index.js';
+import type { GameState, Player } from '../../shared/interfaces.js';
 
 export function useGameLogic() {
     // Learned through ChatGPT that a function can be passed into useState. This is convenient in

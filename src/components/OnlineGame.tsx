@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useContext } from 'react';
 import Game from './Game';
-import { useGameLogic } from '../../shared/hooks/useGameLogic';
+import { useGameLogic } from '../hooks/useGameLogic';
 import { PlayerContext } from '../context/Context';
 import type { OnlineGameProps, GameState } from '../../shared/interfaces';
 import type { Socket } from 'socket.io-client'; // https://socket.io/docs/v4/client-api/#socket
@@ -18,15 +18,15 @@ export default function OnlineGame({ roomId, socket, isHost, guestJoined }: Onli
 
     useEffect(() => {
         s.on('startGame', (data) => {
-            console.log('↪ startGame on', player, data.startingPlayer);
-            // logic.syncState(data)
+            console.log('startGame on', player, data.startingPlayer);
+            logic.syncState(data)
             setResetRequested(false);
             setISentRequest(false);
         });
         s.on('moveMade', (data) => logic.syncState(data));
         s.on('resetRequested', () => setResetRequested(true));
         s.emit('getState', { roomId }, (data: GameState) => {
-            console.log('↪ getState reply on', player, data.startingPlayer);
+            console.log('getState reply on', player, data.startingPlayer);
             logic.syncState(data);
         })
         return () => {

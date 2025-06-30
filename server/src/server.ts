@@ -79,8 +79,8 @@ io.on('connection', (socket) => {
         // Notify other player that a reset has been requested
         socket.to(roomId).emit('resetRequested');
 
-        const participants = io.sockets.adapter.rooms.get(roomId) || new Set();
-        if (resetRequests[roomId].size >= participants.size) {
+        // const participants = io.sockets.adapter.rooms.get(roomId) || new Set();
+        if (resetRequests[roomId].size >= 2) {
             const newState = initGame();
             rooms[roomId] = newState;
             // Clear any pending requests
