@@ -262,9 +262,12 @@ h1 {
 }
 
 @media (max-width: 600px) {
+
   .container {
-      padding: 10px 0 20px 0;
-    }
+    transform: scale(0.92);
+    background-color: var(--dark-background);
+    margin-top: 0;
+  }
 
   .lobby {
     flex-direction: column;
@@ -276,7 +279,7 @@ h1 {
   
   .status {
     width: 90%;
-    margin: 20px auto 0 auto;
+    margin: 0 auto;
     font-size: 18px;
   }
   
@@ -298,6 +301,7 @@ h1 {
     max-width: 300px;
     max-height: 200px;
     overflow-y: auto;
+    overflow-x: hidden;
   }
 
   .current-move {
