@@ -1,4 +1,4 @@
-# -------- 1. Build stage --------
+# Build stage
 FROM node:20-alpine AS builder
 
 WORKDIR /app
@@ -8,7 +8,7 @@ COPY shared/ ./shared/
 COPY server/ ./server/
 RUN npm run --prefix server build
 
-# -------- 2. Production stage --------
+# Production stage
 FROM node:20-alpine
 
 WORKDIR /app
@@ -18,5 +18,5 @@ COPY --from=builder /app/server/dist ./dist
 
 EXPOSE 3001
 
-# Restore the final, correct CMD
+# Command found in package.json
 CMD ["npm", "start"]
