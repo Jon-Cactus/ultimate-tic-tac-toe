@@ -8,7 +8,7 @@ export default function StatusBar({ gameWinner, xIsNext, isHost, guestJoined, ro
     // Check for winner, in which case the text changes
     const text = gameWinner 
     ? `Winner: ${gameWinner}`
-    : `Next player: ${xIsNext ? 'X' : 'O'}`
+    : `${xIsNext && player === 'X' ? "X's move!" : "O's move!"}`
 
     if (mode === 'local') return (
         <div className="status">

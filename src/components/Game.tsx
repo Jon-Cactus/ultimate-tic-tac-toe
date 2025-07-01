@@ -82,5 +82,5 @@ export default function Game(props: GameProps) {
       </div>
       <Description />
     </div>
-  );
+  )
 }

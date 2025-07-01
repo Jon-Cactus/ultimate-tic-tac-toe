@@ -7,7 +7,6 @@ export default function HistoryList({ history, startingPlayer, currentMove, game
     if (history.length === 1) {
       moves = (
         <li key={0}>
-          <p>No moves yet!</p>
         </li>
       )
     }
@@ -34,12 +33,13 @@ export default function HistoryList({ history, startingPlayer, currentMove, game
         </li>
       );
     });
+    moves.reverse();
 
     return (
         <div className="game-info">
           <div className="current-move">Move #{`${currentMove + 1}`}</div>
           <div className="move-list-wrapper">
-            <ol>{moves}</ol>
+            <ol reversed>{moves}</ol>
           </div>
         </div>
     )
