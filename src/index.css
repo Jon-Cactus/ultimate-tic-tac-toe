@@ -271,7 +271,13 @@ h1 {
   }
 
   .lobby {
+    margin: 100px;
     flex-direction: column;
+    align-items: center;
+  }
+
+  .lobby .btn-base {
+    min-width: 70%;
   }
   
   .block input {
