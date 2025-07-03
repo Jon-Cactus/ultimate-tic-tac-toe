@@ -24,7 +24,7 @@ const io = new Server(server, {
 // Object for room state
 const rooms: Record<string, GameState> = {};
 // Object to track which sockets have requested resets
-const resetRequests: Record<string, Set<string>> = {};
+const undoRequests: Record<string, Set<string>> = {};
 
 // Socket logic
 io.on('connection', (socket) => {
@@ -68,24 +68,39 @@ io.on('connection', (socket) => {
         io.in(move.roomId).emit('moveMade', nextState);
     });
 
-    socket.on('resetRequested', ({ roomId }: { roomId: string }) => {
+    socket.on('undoRequested', ({ roomId }: { roomId: string }) => {
         /* ChatGPT saved me here once again. I was having trouble due to the fact that
         a reset could be triggered by the same player clicking "reset" twice, instead 
         of a handshake-like system. A set ensures that each value in the pair is unique. */
         // Ensure that a set exists
-        if (!resetRequests[roomId]) resetRequests[roomId] = new Set();
+        if (!undoRequests[roomId]) undoRequests[roomId] = new Set();
         // Record that this socket wants a reset
-        resetRequests[roomId].add(socket.id);
+        undoRequests[roomId].add(socket.id);
         // Notify other player that a reset has been requested
-        socket.to(roomId).emit('resetRequested');
+        socket.to(roomId).emit('undoRequested');
 
-        // const participants = io.sockets.adapter.rooms.get(roomId) || new Set();
-        if (resetRequests[roomId].size >= 2) {
-            const newState = initGame();
-            rooms[roomId] = newState;
+        if (undoRequests[roomId].size >= 2) {
+            const gameState = rooms[roomId];
+
+            if (gameState.currentMove === 0) {
+                undoRequests[roomId].clear();
+                return;
+            }
+
+            gameState.currentMove --; // Decrement move counter
+            gameState.history.pop();  // Remove the last entry from history
+            const previousState = gameState.history[gameState.currentMove];
+            // Retrieve previous active sub board; set active board to null if reverting to first move
+            gameState.activeSubBoard = previousState.activeSubBoard;
+            /*gameState.activeSubBoard = (gameState.history.length > 1)
+            ? previousState.activeSubBoard
+            : null;*/
+            gameState.currentPlayer = gameState.currentPlayer === 'X' ? 'O' : 'X'; // Rrevert to previous player
+
+          
             // Clear any pending requests
-            resetRequests[roomId].clear();
-            io.in(roomId).emit('startGame', newState);
+            undoRequests[roomId].clear();
+            io.in(roomId).emit('undoAccepted', gameState);
         }
     });
 

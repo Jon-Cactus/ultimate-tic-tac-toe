@@ -1,7 +1,10 @@
 import { useState } from 'react';
 import { calculateWinner, getMoveCoordinates } from '../../shared/gameLogic/helpers.js';
 import { initGame, validateMove, applyMove } from '../../shared/gameLogic/index.js';
-import type { GameState, Player } from '../../shared/interfaces.js';
+import type { GameState, Board, Player } from '../../shared/interfaces.js';
+
+// Fallback empty board to address race condition
+const emptyBoard: Board = Array(9).fill(null).map(() => Array(9).fill(null))
 
 export function useGameLogic() {
     // Learned through ChatGPT that a function can be passed into useState. This is convenient in
@@ -24,7 +27,7 @@ export function useGameLogic() {
       setGameState(nextBoard);
     }
       
-    const currentBoard = gameState.history[gameState.currentMove];
+    const currentBoard = gameState.history[gameState.currentMove].board || emptyBoard;
     const { gameWinner, subBoardWinners } = calculateWinner(currentBoard);
     const xIsNext = (gameState.currentMove % 2 === 0) ? (gameState.startingPlayer === 'X') : (gameState.startingPlayer !== 'X');
 
@@ -33,6 +36,7 @@ export function useGameLogic() {
         history: gameState.history,
         currentMove: gameState.currentMove,
         activeSubBoard: gameState.activeSubBoard,
+        currentPlayer: gameState.currentPlayer,
         startingPlayer: gameState.startingPlayer,
         xIsNext,
         currentBoard,

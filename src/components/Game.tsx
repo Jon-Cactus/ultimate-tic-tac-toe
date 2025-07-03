@@ -17,7 +17,7 @@ export default function Game(props: GameProps) {
     gameWinner,
     subBoardWinners, 
     resetBoard,
-    requestReset,
+    requestUndo,
     resetRequested,
     iSentRequest,
     onSquareClick,
@@ -28,17 +28,20 @@ export default function Game(props: GameProps) {
 
    let resetBtn;
    if (roomId) {
-    // Prepare text when the other player requests a reset
-    const requestTxt = (resetRequested && !iSentRequest) ? 'Opponent has requested a reset!' : '';
+    // Prepare text when the other player requests a undo
+    const requestTxt = (resetRequested && !iSentRequest) ? 'Opponent has requested an undo!' : '';
+    const isFirstMove = history.length > 1;
+
     // Change button text depending upon context
-    const requestBtnTxt = (resetRequested && !iSentRequest) // Oponent requests reset
-    ? 'Reset Game' 
-    : (resetRequested && iSentRequest) // User requests reset
-    ? 'Reset Requested'
-    : 'Request Reset'; // Default
+    const requestBtnTxt = (resetRequested && !iSentRequest) // Oponent requests undo
+    ? 'Undo Last Move' 
+    : (resetRequested && iSentRequest) // User requests undo
+    ? 'Undo Requested'
+    : 'Request Undo'; // Default
+    
     resetBtn = (
-      <div className="reset-control">
-        <button className="btn-base" onClick={requestReset}>
+      <div className="undo-control">
+        <button className={`btn-base ${isFirstMove ? '' : 'hidden'}`}  onClick={requestUndo}>
           {requestBtnTxt}
         </button>
         <div>{requestTxt}</div>
@@ -46,7 +49,7 @@ export default function Game(props: GameProps) {
     )
    } else if (!roomId) {
     resetBtn = (
-      <div className="reset-control">
+      <div className="undo-control">
         <button className="btn-base" onClick={() => resetBoard?.()}>
           Restart Game
         </button>

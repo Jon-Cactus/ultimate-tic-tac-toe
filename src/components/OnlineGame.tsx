@@ -11,7 +11,7 @@ export default function OnlineGame({ roomId, socket, isHost, guestJoined }: Onli
     const logic = useGameLogic();
     const player = useContext(PlayerContext);
     const socketRef = useRef<Socket>(socket);
-    const [resetRequested, setResetRequested] = useState<boolean>(false);
+    const [undoRequested, setUndoRequested] = useState<boolean>(false);
     const [iSentRequest, setISentRequest] = useState<boolean>(false);
     const s = socketRef.current;
 
@@ -20,11 +20,16 @@ export default function OnlineGame({ roomId, socket, isHost, guestJoined }: Onli
         s.on('startGame', (data) => {
             console.log('startGame on', player, data.startingPlayer);
             logic.syncState(data)
-            setResetRequested(false);
+            setUndoRequested(false);
             setISentRequest(false);
         });
         s.on('moveMade', (data) => logic.syncState(data));
-        s.on('resetRequested', () => setResetRequested(true));
+        s.on('undoRequested', () => setUndoRequested(true));
+        s.on('undoAccepted', (data) => {
+            logic.syncState(data);
+            setUndoRequested(false);
+            setISentRequest(false);
+        });
         s.emit('getState', { roomId }, (data: GameState) => {
             console.log('getState reply on', player, data.startingPlayer);
             logic.syncState(data);
@@ -46,9 +51,10 @@ export default function OnlineGame({ roomId, socket, isHost, guestJoined }: Onli
         });
     };
     // Reset flow
-    const requestReset = () => {
-        s.emit('resetRequested', { roomId });
-        setResetRequested(true);
+    const requestUndo = () => {
+        if (logic.history.length === 0) return;
+        s.emit('undoRequested', { roomId });
+        setUndoRequested(true);
         setISentRequest(true);
     }
 
@@ -59,12 +65,13 @@ export default function OnlineGame({ roomId, socket, isHost, guestJoined }: Onli
             activeSubBoard={logic.activeSubBoard}
             currentBoard={logic.currentBoard}
             startingPlayer={logic.startingPlayer}
+            currentPlayer={logic.currentPlayer}
             xIsNext={logic.xIsNext}
             gameWinner={logic.gameWinner}
             subBoardWinners={logic.subBoardWinners}
             // Game reset
-            requestReset={requestReset}
-            resetRequested={resetRequested}
+            requestUndo={requestUndo}
+            resetRequested={undoRequested}
             iSentRequest={iSentRequest}
             
             onSquareClick={handleOnlineClick}

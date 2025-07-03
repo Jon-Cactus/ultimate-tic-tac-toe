@@ -1,13 +1,14 @@
 import type { SubBoardProps } from '../../../shared/interfaces';
 import Square from './Square';
 
-export default function SubBoard({ squares, onSquareClick, isActive, isWon }: SubBoardProps) {
+export default function SubBoard({ squares, onSquareClick, allActive, isActive, isWon }: SubBoardProps) {
   const playerColor = // Determine correct class to add
     isWon === 'X'
     ? 'player-1 won'
     : isWon === 'O'
     ? 'player-2 won'
     : ''
+
   return (
   <>
     <div className={`sub-board ${playerColor}`}>{isWon !== 'draw' ? isWon : ''}
@@ -20,7 +21,7 @@ export default function SubBoard({ squares, onSquareClick, isActive, isWon }: Su
                 key={squareIdx}
                 value={squares[squareIdx]}
                 onSquareClick={() => onSquareClick(squareIdx)}
-                active={isActive ? 'active' : ''}
+                active={isActive || allActive ? 'active' : ''}
               />
             )
           })}

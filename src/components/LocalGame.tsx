@@ -12,6 +12,7 @@ export default function LocalGame() {
             activeSubBoard={logic.activeSubBoard}
             currentBoard={logic.currentBoard}
             startingPlayer={logic.startingPlayer}
+            currentPlayer={logic.currentPlayer}
             xIsNext={logic.xIsNext}
             gameWinner={logic.gameWinner}
             subBoardWinners={logic.subBoardWinners}

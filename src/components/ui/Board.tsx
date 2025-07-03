@@ -2,7 +2,10 @@ import SubBoard from './SubBoard';
 import type { BoardProps } from '../../../shared/interfaces';
 
 export default function Board({ boards, activeSubBoard, onSquareClick, subBoardWinners}: BoardProps) {
-    return (
+  // Case of next player being able to move on any sub board
+  const allActive = activeSubBoard === null ? true : false;
+  
+  return (
         <div className="meta-board">
           {Array.from({length: 3}, (_, row) => ( // Create a 3x3 array of sub boards
             <div className="meta-board-row" key={row}>
@@ -12,6 +15,7 @@ export default function Board({ boards, activeSubBoard, onSquareClick, subBoardW
                   <SubBoard
                     key={idx}
                     squares={boards[idx]}
+                    allActive={allActive}
                     isActive={activeSubBoard === idx}
                     onSquareClick={(squareIdx) => onSquareClick(idx, squareIdx)}
                     isWon={subBoardWinners[idx]}

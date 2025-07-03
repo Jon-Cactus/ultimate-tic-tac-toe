@@ -9,7 +9,7 @@ export function validateMove(
     player: string | null
   ): boolean {
     const { history, currentMove, activeSubBoard, startingPlayer } = state;
-    const currentBoard = history[currentMove]; // Retrieve current snapshot
+    const currentBoard = history[currentMove].board; // Retrieve current snapshot
     if (!currentBoard) {
       return false;
     }
