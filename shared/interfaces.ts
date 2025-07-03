@@ -4,22 +4,26 @@ export type Player = 'X' | 'O';
 export type Cell = Player | null;
 export type SubBoard = Cell[];
 export type Board = SubBoard[];
+export type HistoryEntry = {
+    board: Board;
+    activeSubBoard: number | null;
+}
 
 // Props
 export interface GameProps {
-    history: Board[];
+    history: HistoryEntry[];
     currentMove: number;
     activeSubBoard: number | null;
     currentBoard: Board;
+    currentPlayer: Player;
     startingPlayer: Player | null;
     xIsNext: boolean;
     gameWinner: string | null;
     subBoardWinners: (string | null)[];
     onSquareClick: (subBoardIdx: number, squareIdx: number) => void;
-
     // Optional: game reset/online play
     resetBoard?: () => void;
-    requestReset?: () => void;
+    requestUndo?: () => void;
     resetRequested?: boolean;
     iSentRequest?: boolean;
     // Optional: multiplayer mode
@@ -38,6 +42,7 @@ export interface BoardProps {
 export interface SubBoardProps {
     squares: SubBoard;
     onSquareClick: (squareIdx: number) => void;
+    allActive: boolean;
     isActive: boolean | null;
     isWon: string | null;
 }
@@ -49,7 +54,7 @@ export interface SquareProps {
 }
 
 export interface HistoryListProps {
-    history: Board[];
+    history: HistoryEntry[];
     startingPlayer: (Player | null);
     currentMove: number;
     gameWinner: string | null;
@@ -73,9 +78,10 @@ export interface OnlineGameProps {
 }
 // Server
 export interface GameState {
-    history: Board[];
+    history: HistoryEntry[];
     currentMove: number;
     activeSubBoard: number | null;
+    currentPlayer: Player;
     startingPlayer: Player;
 }
 
