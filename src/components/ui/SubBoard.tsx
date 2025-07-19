@@ -1,7 +1,8 @@
 import type { SubBoardProps } from '../../../shared/interfaces';
 import Square from './Square';
+import { memo } from 'react';
 
-export default function SubBoard({ squares, onSquareClick, allActive, isActive, isWon }: SubBoardProps) {
+function SubBoard({ squares, onSquareClick, allActive, isActive, isWon }: SubBoardProps) {
   const playerColor = // Determine correct class to add
     isWon === 'X'
     ? 'player-1 won'
@@ -31,3 +32,5 @@ export default function SubBoard({ squares, onSquareClick, allActive, isActive, 
   </> 
   )
 }
+
+export default memo(SubBoard);

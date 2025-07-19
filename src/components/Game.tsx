@@ -5,6 +5,8 @@ import Description from './ui/Description';
 import type { GameProps } from '../../shared/interfaces';
 import '../App.css';
 
+/* TODO: add "play again?" button when a game is over */
+
 export default function Game(props: GameProps) {
   // Unload props
   const {

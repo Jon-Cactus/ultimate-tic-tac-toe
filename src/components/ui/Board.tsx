@@ -1,7 +1,8 @@
 import SubBoard from './SubBoard';
 import type { BoardProps } from '../../../shared/interfaces';
+import { memo } from 'react';
 
-export default function Board({ boards, activeSubBoard, onSquareClick, subBoardWinners}: BoardProps) {
+function Board({ boards, activeSubBoard, onSquareClick, subBoardWinners}: BoardProps) {
   // Case of next player being able to move on any sub board
   const allActive = activeSubBoard === null ? true : false;
   
@@ -27,3 +28,5 @@ export default function Board({ boards, activeSubBoard, onSquareClick, subBoardW
         </div>
     )
 }
+
+export default memo(Board);

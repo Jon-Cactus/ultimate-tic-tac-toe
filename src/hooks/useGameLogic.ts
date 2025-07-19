@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { calculateWinner, getMoveCoordinates } from '../../shared/gameLogic/helpers.js';
 import { initGame, validateMove, applyMove } from '../../shared/gameLogic/index.js';
 import type { GameState, Board, Player } from '../../shared/interfaces.js';
@@ -7,14 +7,12 @@ import type { GameState, Board, Player } from '../../shared/interfaces.js';
 const emptyBoard: Board = Array(9).fill(null).map(() => Array(9).fill(null))
 
 export function useGameLogic() {
-    // Learned through ChatGPT that a function can be passed into useState. This is convenient in
-    // this case due to the fact that `initGame` returns values that change throughout the game, meaning
-    // they can be easily updated or even reset.
+
     const [gameState, setGameState] = useState<GameState>(initGame()); 
     const syncState = (next: GameState) => setGameState(next);
     
     // Restart or begin game
-    const handleFirstMoveSelection = () => setGameState(initGame());
+    const handleFirstMoveSelection = useCallback(() => setGameState(initGame()), []);
     // Determine validity of potential move
     const isValidMove = (subBoardIdx: number, squareIdx: number, player: Player | null) =>
       validateMove(gameState, subBoardIdx, squareIdx, player);
@@ -28,7 +26,11 @@ export function useGameLogic() {
     }
       
     const currentBoard = gameState.history[gameState.currentMove].board || emptyBoard;
-    const { gameWinner, subBoardWinners } = calculateWinner(currentBoard);
+
+    const { gameWinner, subBoardWinners } = useMemo(() => {
+      return calculateWinner(currentBoard);
+    }, [currentBoard]);
+
     const xIsNext = (gameState.currentMove % 2 === 0) ? (gameState.startingPlayer === 'X') : (gameState.startingPlayer !== 'X');
 
     return {

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useContext } from 'react';
+import { useState, useEffect, useRef, useContext, useCallback } from 'react';
 import Game from './Game';
 import { useGameLogic } from '../hooks/useGameLogic';
 import { PlayerContext } from '../context/Context';
@@ -41,7 +41,7 @@ export default function OnlineGame({ roomId, socket, isHost, guestJoined }: Onli
         };
     }, []); // Mount only once
     // Handle move flow
-    const handleOnlineClick = (subBoardIdx: number, squareIdx: number) => {
+    const handleOnlineClick = useCallback((subBoardIdx: number, squareIdx: number) => {
         if (!logic.isValidMove(subBoardIdx, squareIdx, player)) return; // Validate before sending to server
         s.emit('makeMove', {
             roomId,
@@ -49,14 +49,14 @@ export default function OnlineGame({ roomId, socket, isHost, guestJoined }: Onli
             squareIdx: squareIdx,
             player
         });
-    };
+    }, [logic, player, roomId, s]);
     // Reset flow
-    const requestUndo = () => {
+    const requestUndo = useCallback(() => {
         if (logic.history.length === 0) return;
         s.emit('undoRequested', { roomId });
         setUndoRequested(true);
         setISentRequest(true);
-    }
+    }, [logic.history.length, roomId, s]);
 
     return (
         <Game

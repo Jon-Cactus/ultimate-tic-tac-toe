@@ -1,6 +1,7 @@
 import type { SquareProps } from '../../../shared/interfaces';
+import { memo } from 'react';
 
-export default function Square({ value, onSquareClick, active }: SquareProps) {
+function Square({ value, onSquareClick, active }: SquareProps) {
   const playerColor = // Determine correct class to add
     value === 'X'
     ? 'player-1'
@@ -15,3 +16,5 @@ export default function Square({ value, onSquareClick, active }: SquareProps) {
     </button>
   )
 }
+
+export default memo(Square);
