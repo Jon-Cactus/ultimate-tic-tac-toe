@@ -69,9 +69,6 @@ io.on('connection', (socket) => {
     });
 
     socket.on('undoRequested', ({ roomId }: { roomId: string }) => {
-        /* ChatGPT saved me here once again. I was having trouble due to the fact that
-        a reset could be triggered by the same player clicking "reset" twice, instead 
-        of a handshake-like system. A set ensures that each value in the pair is unique. */
         // Ensure that a set exists
         if (!undoRequests[roomId]) undoRequests[roomId] = new Set();
         // Record that this socket wants a reset
@@ -92,12 +89,7 @@ io.on('connection', (socket) => {
             const previousState = gameState.history[gameState.currentMove];
             // Retrieve previous active sub board; set active board to null if reverting to first move
             gameState.activeSubBoard = previousState.activeSubBoard;
-            /*gameState.activeSubBoard = (gameState.history.length > 1)
-            ? previousState.activeSubBoard
-            : null;*/
             gameState.currentPlayer = gameState.currentPlayer === 'X' ? 'O' : 'X'; // Rrevert to previous player
-
-          
             // Clear any pending requests
             undoRequests[roomId].clear();
             io.in(roomId).emit('undoAccepted', gameState);
